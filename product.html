@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — HOGALALLA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html?cat=anime">Anime</a></li>
+      <li><a href="shop.html?cat=tees">Tees</a></li>
+      <li><a href="shop.html?cat=hoodies">Hoodies</a></li>
+      <li><a href="shop.html?cat=sweatshirts">Sweatshirts</a></li>
+      <li><a href="shop.html">All</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="account.html" class="icon-btn" data-nav="account" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </a>
+      <a href="cart.html" class="icon-btn" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-toggle icon-btn" aria-label="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="breadcrumb" style="padding-top:28px;"><a href="index.html">Home</a> / <a href="shop.html" id="crumbCat">Shop</a> / <span id="crumbName">Product</span></div>
+
+  <div class="pd-grid" id="pdRoot"></div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="section-head"><h2>You may also like</h2></div>
+    <div class="product-grid" id="relatedGrid"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:14px;">HOGA<span>LALLA</span></div>
+        <p class="desc">Independent streetwear label. Designed in-house, printed and shipped on demand.</p>
+      </div>
+      <div>
+        <h5>Shop</h5>
+        <div class="footer-links">
+          <a href="shop.html?cat=anime">Anime</a>
+          <a href="shop.html?cat=tees">Tees</a>
+          <a href="shop.html?cat=hoodies">Hoodies</a>
+          <a href="shop.html?cat=sweatshirts">Sweatshirts</a>
+        </div>
+      </div>
+      <div>
+        <h5>Help</h5>
+        <div class="footer-links">
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="account.html">Track Order</a>
+        </div>
+      </div>
+      <div>
+        <h5>Newsletter</h5>
+        <div class="field"><input type="email" placeholder="you@email.com"></div>
+        <button class="btn btn-primary btn-block" onclick="showToast('Subscribed')">Subscribe</button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 HOGALALLA. All rights reserved.</span>
+      <span>Made on demand · Fulfilled via Printify</span>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const product = getProduct(params.get('id')) || PRODUCTS[0];
+  let selectedSize = product.sizes[1] || product.sizes[0];
+  let selectedColorIdx = 0;
+  let qty = 1;
+
+  document.getElementById('crumbCat').textContent = product.category;
+  document.getElementById('crumbCat').href = `shop.html?cat=${product.category}`;
+  document.getElementById('crumbName').textContent = product.name;
+  document.title = product.name + ' — HOGALALLA';
+
+  function renderPD() {
+    document.getElementById('pdRoot').innerHTML = `
+      <div>
+        <div class="pd-gallery-main"><img src="${product.images[selectedColorIdx]}" alt="${product.name}"></div>
+        <div class="pd-thumbs">
+          ${product.images.map((img, i) => `<div class="pd-thumb ${i === selectedColorIdx ? 'active' : ''}" data-idx="${i}"><img src="${img}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="pd-info">
+        <span class="card-cat">${product.category}</span>
+        <h1>${product.name}</h1>
+        <div class="pd-price">
+          <span class="price">${formatINR(product.price)}</span>
+          ${product.oldPrice ? `<span class="price-old">${formatINR(product.oldPrice)}</span>` : ''}
+          ${product.badge ? `<span class="tag">${product.badge}</span>` : ''}
+        </div>
+        <p class="pd-desc">${product.desc}</p>
+
+        <div class="option-group">
+          <div class="option-label"><span>Size</span><a href="#" style="color:var(--sky);" id="sizeGuideLink">Size guide</a></div>
+          <div class="option-row" id="sizeRow">
+            ${product.sizes.map(s => `<button class="opt-btn ${s === selectedSize ? 'active' : ''}" data-size="${s}">${s}</button>`).join('')}
+          </div>
+        </div>
+
+        <div class="option-group">
+          <div class="option-label"><span>Colour</span></div>
+          <div class="option-row" id="colorRow">
+            ${product.colors.map((c, i) => `<button class="opt-btn ${i === selectedColorIdx ? 'active' : ''}" data-color-idx="${i}" style="border-color:${i === selectedColorIdx ? 'var(--sky)' : 'var(--line)'};"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${c};margin-right:6px;vertical-align:middle;border:1px solid var(--line);"></span>${i === 0 ? 'Black' : 'Blue'}</button>`).join('')}
+          </div>
+        </div>
+
+        <div class="qty-row">
+          <span class="option-label" style="margin:0;">Quantity</span>
+          <div class="qty-control">
+            <button id="qtyMinus">−</button>
+            <span id="qtyVal">${qty}</span>
+            <button id="qtyPlus">+</button>
+          </div>
+        </div>
+
+        <div class="pd-buy-row">
+          <button class="btn btn-outline btn-lg" style="flex:1;" id="addCartBtn">Add to Cart</button>
+          <button class="btn btn-primary btn-lg" style="flex:1;" id="buyNowBtn">Buy Now</button>
+        </div>
+
+        <div class="pd-meta">
+          <div><strong>Fulfilment:</strong> Printed to order, ships in 3–5 business days via Printify.</div>
+          <div><strong>Returns:</strong> Free size exchange within 7 days of delivery.</div>
+          <div><strong>Material:</strong> Premium cotton blend, screen/DTG printed.</div>
+        </div>
+      </div>`;
+
+    document.getElementById('sizeRow').addEventListener('click', e => {
+      const btn = e.target.closest('.opt-btn');
+      if (!btn) return;
+      selectedSize = btn.dataset.size;
+      renderPD();
+    });
+    document.getElementById('colorRow').addEventListener('click', e => {
+      const btn = e.target.closest('.opt-btn');
+      if (!btn) return;
+      selectedColorIdx = Number(btn.dataset.colorIdx);
+      renderPD();
+    });
+    document.querySelectorAll('.pd-thumb').forEach(t => t.addEventListener('click', () => {
+      selectedColorIdx = Number(t.dataset.idx);
+      renderPD();
+    }));
+    document.getElementById('qtyMinus').addEventListener('click', () => { qty = Math.max(1, qty - 1); renderPD(); });
+    document.getElementById('qtyPlus').addEventListener('click', () => { qty += 1; renderPD(); });
+    document.getElementById('addCartBtn').addEventListener('click', () => addToCart(product.id, selectedSize, product.colors[selectedColorIdx], qty));
+    document.getElementById('buyNowBtn').addEventListener('click', () => {
+      addToCart(product.id, selectedSize, product.colors[selectedColorIdx], qty);
+      window.location.href = 'cart.html';
+    });
+    document.getElementById('sizeGuideLink').addEventListener('click', e => { e.preventDefault(); showToast('Size guide: true to size, oversized fit runs 1 size large'); });
+  }
+  renderPD();
+
+  const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+  document.getElementById('relatedGrid').innerHTML = related.map(p => `
+    <div class="card">
+      <a href="product.html?id=${p.id}" class="card-media">
+        ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
+        <img src="${p.image}" alt="${p.name}">
+      </a>
+      <div class="card-body">
+        <a href="product.html?id=${p.id}"><span class="card-cat">${p.category}</span><h4>${p.name}</h4></a>
+        <div class="card-price-row"><span class="price">${formatINR(p.price)}</span></div>
+      </div>
+      <div class="card-actions">
+        <a href="product.html?id=${p.id}" class="btn btn-outline">View</a>
+        <button class="btn btn-primary" onclick="addToCart('${p.id}','${p.sizes[1]||p.sizes[0]}','${p.colors[0]}')">Buy Now</button>
+      </div>
+    </div>`).join('');
+</script>
+</body>
+</html>
