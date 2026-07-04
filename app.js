@@ -1,99 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Account — HOGALALLA</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* ============================================
+   HOGALALLA — Shared app logic
+   Cart + mock auth run on localStorage for now.
+   Replace CART/AUTH sections with real Supabase +
+   Printify + Razorpay calls when you connect keys.
+   ============================================ */
 
-<nav class="nav">
-  <div class="wrap nav-inner">
-    <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="shop.html">Shop</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="account.html" class="icon-btn active" title="Account">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-      </a>
-      <a href="cart.html" class="icon-btn" title="Cart">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
-        <span class="cart-count">0</span>
-      </a>
-    </div>
-  </div>
-</nav>
+const CART_KEY = 'hogalalla_cart';
+const AUTH_KEY = 'hogalalla_user';
+const ADDR_KEY = 'hogalalla_address';
 
-<div class="wrap page-head">
-  <div class="breadcrumb"><a href="index.html">Home</a> / Account</div>
-  <h1 class="page-title">My Account</h1>
-</div>
+/* ---------- Cart ---------- */
+function getCart() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+  catch (e) { return []; }
+}
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  updateCartBadge();
+}
+function addToCart(productId, size, color, qty = 1) {
+  const cart = getCart();
+  const existing = cart.find(i => i.id === productId && i.size === size && i.color === color);
+  if (existing) existing.qty += qty;
+  else cart.push({ id: productId, size, color, qty });
+  saveCart(cart);
+  showToast('Added to cart');
+}
+function removeFromCart(index) {
+  const cart = getCart();
+  cart.splice(index, 1);
+  saveCart(cart);
+}
+function updateQty(index, qty) {
+  const cart = getCart();
+  if (!cart[index]) return;
+  cart[index].qty = Math.max(1, qty);
+  saveCart(cart);
+}
+function cartTotal() {
+  return getCart().reduce((sum, item) => {
+    const p = getProduct(item.id);
+    return sum + (p ? p.price * item.qty : 0);
+  }, 0);
+}
+function cartCount() {
+  return getCart().reduce((sum, i) => sum + i.qty, 0);
+}
+function updateCartBadge() {
+  document.querySelectorAll('.cart-count').forEach(el => {
+    const c = cartCount();
+    el.textContent = c;
+    el.style.display = c > 0 ? 'flex' : 'none';
+  });
+}
 
-<div class="wrap" id="accountRoot" style="padding-bottom:80px;"></div>
-
-<script src="data.js"></script>
-<script src="app.js"></script>
-<script>
+/* ---------- Mock auth ----------
+   Swap this for supabase.auth.signInWithOAuth({ provider: 'google' })
+   and supabase.auth.signInWithOtp({ phone }) once Supabase is connected. */
+function getUser() {
+  try { return JSON.parse(localStorage.getItem(AUTH_KEY)); }
+  catch (e) { return null; }
+}
+function setUser(user) {
+  localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+}
+function logout() {
+  localStorage.removeItem(AUTH_KEY);
+  window.location.href = 'index.html';
+}
+function requireAuthUI() {
   const user = getUser();
-  const root = document.getElementById('accountRoot');
+  const loginLink = document.querySelector('[data-nav="account"]');
+  if (loginLink && user) loginLink.href = 'account.html';
+}
 
-  if (!user) {
-    root.innerHTML = `<div class="empty-state">
-      <h3>You're not logged in</h3>
-      <p>Log in to view your orders and saved address.</p>
-      <a href="login.html" class="btn btn-primary" style="margin-top:20px;">Log In</a>
-    </div>`;
-  } else {
-    const order = JSON.parse(localStorage.getItem('hogalalla_last_order') || 'null');
-    const addr = getAddress();
+/* ---------- Address ---------- */
+function saveAddress(addr) { localStorage.setItem(ADDR_KEY, JSON.stringify(addr)); }
+function getAddress() {
+  try { return JSON.parse(localStorage.getItem(ADDR_KEY)); }
+  catch (e) { return null; }
+}
 
-    root.innerHTML = `
-      <div class="cart-layout">
-        <div>
-          <div class="form-card" style="margin-bottom:20px;">
-            <h3>Profile</h3>
-            <div class="summary-row"><span>Name</span><span>${user.name || '—'}</span></div>
-            <div class="summary-row"><span>Login method</span><span style="text-transform:capitalize;">${user.method}</span></div>
-            ${user.email ? `<div class="summary-row"><span>Email</span><span>${user.email}</span></div>` : ''}
-            ${user.phone ? `<div class="summary-row"><span>Phone</span><span>${user.phone}</span></div>` : ''}
-          </div>
-
-          <div class="form-card">
-            <h3>Order History</h3>
-            ${order ? `
-              <div class="cart-item" style="grid-template-columns:1fr auto;">
-                <div class="cart-item-info">
-                  <h4>Order ${order.id}</h4>
-                  <div class="meta">${order.cart.length} item(s) · Delivering to ${order.address.city}</div>
-                </div>
-                <div class="cart-item-right">
-                  <span class="tag">Processing</span>
-                  <span class="price">${formatINR(order.total)}</span>
-                </div>
-              </div>
-            ` : `<p style="color:var(--muted); font-size:14px;">No orders yet. <a href="shop.html" style="color:var(--sky);">Start shopping →</a></p>`}
-          </div>
-        </div>
-
-        <div class="summary-card">
-          <h3>Saved Address</h3>
-          ${addr ? `
-            <p style="font-size:14px; color:var(--ink); line-height:1.7;">
-              ${addr.fullName}<br>
-              ${addr.addr1}${addr.addr2 ? ', ' + addr.addr2 : ''}<br>
-              ${addr.city}, ${addr.state} ${addr.pincode}<br>
-              ${addr.country}<br>
-              ${addr.phone}
-            </p>
-          ` : `<p style="color:var(--muted); font-size:14px;">No address saved yet.</p>`}
-          <button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="logout()">Log Out</button>
-        </div>
-      </div>
-    `;
+/* ---------- Toast ---------- */
+function showToast(msg) {
+  let toast = document.querySelector('.toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'toast';
+    document.body.appendChild(toast);
   }
-</script>
-</body>
-</html>
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+/* ---------- Currency ---------- */
+function formatINR(n) {
+  return '₹' + n.toLocaleString('en-IN');
+}
+
+/* ---------- Mobile nav ---------- */
+function initMobileNav() {
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.querySelector('.nav-links');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', () => {
+    const open = links.style.display === 'flex';
+    links.style.display = open ? 'none' : 'flex';
+    links.style.cssText += open ? '' : 'position:absolute;top:72px;left:0;right:0;background:#0B0D12;flex-direction:column;padding:20px 24px;border-bottom:1px solid #262B36;';
+  });
+}
+
+/* ---------- Custom products (added via admin.html) ----------
+   Stored in this browser's localStorage only. Runs immediately
+   (not on DOMContentLoaded) so PRODUCTS is ready before each
+   page's own render script runs.
+   Later: replace this with products fetched from a real database
+   (e.g. Supabase) so new products show up for ALL visitors, not
+   just in your own browser. */
+const CUSTOM_PRODUCTS_KEY = 'hogalalla_custom_products';
+function getCustomProducts() {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_PRODUCTS_KEY)) || []; }
+  catch (e) { return []; }
+}
+function saveCustomProducts(list) { localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(list)); }
+function addCustomProduct(product) {
+  const list = getCustomProducts();
+  list.push(product);
+  saveCustomProducts(list);
+  mergeCustomProducts();
+}
+function deleteCustomProduct(id) {
+  saveCustomProducts(getCustomProducts().filter(p => p.id !== id));
+  mergeCustomProducts();
+}
+function mergeCustomProducts() {
+  for (let i = PRODUCTS.length - 1; i >= 0; i--) {
+    if (PRODUCTS[i]._custom) PRODUCTS.splice(i, 1);
+  }
+  getCustomProducts().forEach(p => {
+    p._custom = true;
+    if (!p.image) p.image = mockupSVG(p.kind || 'tee', (p.colors && p.colors[0]) || '#0B0D12', p.accent || '#38BDF8', p.graphic || 'circle');
+    if (!p.images || !p.images.length) p.images = [p.image];
+    PRODUCTS.push(p);
+  });
+}
+mergeCustomProducts();
+
+/* ---------- Admin auth ----------
+   Client-side only — fine for keeping casual visitors out of a
+   page nobody else has the link to, but not real security. Don't
+   reuse this password for anything sensitive. */
+const ADMIN_PASSWORD = 'hogalalla2026';
+const ADMIN_SESSION_KEY = 'hogalalla_admin_ok';
+function isAdmin() { return sessionStorage.getItem(ADMIN_SESSION_KEY) === '1'; }
+function adminLogin(pass) {
+  if (pass === ADMIN_PASSWORD) { sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); return true; }
+  return false;
+}
+function adminLogout() { sessionStorage.removeItem(ADMIN_SESSION_KEY); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateCartBadge();
+  requireAuthUI();
+  initMobileNav();
+});
