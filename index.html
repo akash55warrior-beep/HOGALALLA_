@@ -122,21 +122,12 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <script src="data.js"></script>
+<script src="supabase-client.js"></script>
 <script src="app.js"></script>
 <script>
-  const catGrid = document.getElementById('catGrid');
-  catGrid.innerHTML = CATEGORIES.map(c => `
-    <a href="shop.html?cat=${c.id}" class="cat-tile" data-glyph="${c.glyph}">
-      <div><h3>${c.label}</h3><span>${c.desc}</span></div>
-    </a>`).join('');
-
-  const newGrid = document.getElementById('newGrid');
-  const featured = PRODUCTS.slice(0, 4);
-  newGrid.innerHTML = featured.map(cardHTML).join('');
-
-  document.querySelector('[data-hero-img]').src = PRODUCTS[1].image;
-
   function cardHTML(p) {
     return `
     <div class="card">
@@ -156,6 +147,19 @@
       </div>
     </div>`;
   }
+
+  loadAllProducts().then(() => {
+    const catGrid = document.getElementById('catGrid');
+    catGrid.innerHTML = CATEGORIES.map(c => `
+      <a href="shop.html?cat=${c.id}" class="cat-tile" data-glyph="${c.glyph}">
+        <div><h3>${c.label}</h3><span>${c.desc}</span></div>
+      </a>`).join('');
+
+    const newGrid = document.getElementById('newGrid');
+    newGrid.innerHTML = PRODUCTS.slice(0, 4).map(cardHTML).join('');
+
+    if (PRODUCTS[1]) document.querySelector('[data-hero-img]').src = PRODUCTS[1].image;
+  });
 </script>
 </body>
 </html>

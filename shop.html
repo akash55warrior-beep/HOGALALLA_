@@ -90,7 +90,10 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <script src="data.js"></script>
+<script src="supabase-client.js"></script>
 <script src="app.js"></script>
 <script>
   const params = new URLSearchParams(window.location.search);
@@ -142,7 +145,7 @@
       </div>`).join('') || `<div class="empty-state"><h3>No products here yet</h3><p>Check back soon for this category.</p></div>`;
   }
 
-  render();
+  loadAllProducts().then(render);
 </script>
 </body>
 </html>

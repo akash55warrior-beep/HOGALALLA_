@@ -112,6 +112,55 @@ function initMobileNav() {
   });
 }
 
+/* ---------- Custom products (added via admin.html) ----------
+   Stored in this browser's localStorage only. Runs immediately
+   (not on DOMContentLoaded) so PRODUCTS is ready before each
+   page's own render script runs.
+   Later: replace this with products fetched from a real database
+   (e.g. Supabase) so new products show up for ALL visitors, not
+   just in your own browser. */
+const CUSTOM_PRODUCTS_KEY = 'hogalalla_custom_products';
+function getCustomProducts() {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_PRODUCTS_KEY)) || []; }
+  catch (e) { return []; }
+}
+function saveCustomProducts(list) { localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(list)); }
+function addCustomProduct(product) {
+  const list = getCustomProducts();
+  list.push(product);
+  saveCustomProducts(list);
+  mergeCustomProducts();
+}
+function deleteCustomProduct(id) {
+  saveCustomProducts(getCustomProducts().filter(p => p.id !== id));
+  mergeCustomProducts();
+}
+function mergeCustomProducts() {
+  for (let i = PRODUCTS.length - 1; i >= 0; i--) {
+    if (PRODUCTS[i]._custom) PRODUCTS.splice(i, 1);
+  }
+  getCustomProducts().forEach(p => {
+    p._custom = true;
+    if (!p.image) p.image = mockupSVG(p.kind || 'tee', (p.colors && p.colors[0]) || '#0B0D12', p.accent || '#38BDF8', p.graphic || 'circle');
+    if (!p.images || !p.images.length) p.images = [p.image];
+    PRODUCTS.push(p);
+  });
+}
+mergeCustomProducts();
+
+/* ---------- Admin auth ----------
+   Client-side only — fine for keeping casual visitors out of a
+   page nobody else has the link to, but not real security. Don't
+   reuse this password for anything sensitive. */
+const ADMIN_PASSWORD = 'hogalalla2026';
+const ADMIN_SESSION_KEY = 'hogalalla_admin_ok';
+function isAdmin() { return sessionStorage.getItem(ADMIN_SESSION_KEY) === '1'; }
+function adminLogin(pass) {
+  if (pass === ADMIN_PASSWORD) { sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); return true; }
+  return false;
+}
+function adminLogout() { sessionStorage.removeItem(ADMIN_SESSION_KEY); }
+
 document.addEventListener('DOMContentLoaded', () => {
   updateCartBadge();
   requireAuthUI();

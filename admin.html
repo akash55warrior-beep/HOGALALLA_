@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — HOGALALLA</title>
-<meta name="robots" content="noindex, nofollow">
+<title>My Account — HOGALALLA</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,205 +11,91 @@
 <nav class="nav">
   <div class="wrap nav-inner">
     <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
-    <ul class="nav-links"><li><a href="index.html">Back to Site</a></li></ul>
-    <div class="nav-actions"></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="account.html" class="icon-btn active" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </a>
+      <a href="cart.html" class="icon-btn" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+    </div>
   </div>
 </nav>
 
-<div id="gate" class="wrap auth-shell">
-  <div class="auth-head">
-    <h1>Admin Access</h1>
-    <p>This page is private — enter your admin password</p>
-  </div>
-  <div class="form-card">
-    <div class="field"><label>Password</label><input type="password" id="pwInput" placeholder="••••••••"></div>
-    <button class="btn btn-primary btn-block" id="pwSubmit">Unlock</button>
-  </div>
+<div class="wrap page-head">
+  <div class="breadcrumb"><a href="index.html">Home</a> / Account</div>
+  <h1 class="page-title">My Account</h1>
 </div>
 
-<div id="panel" class="wrap" style="display:none; padding-bottom:100px;">
-  <div class="page-head" style="padding-top:32px;">
-    <h1 class="page-title">Product Admin</h1>
-    <p style="color:var(--muted); margin-top:8px;">Add products instantly — they'll appear on the site in this browser right away.</p>
-  </div>
+<div class="wrap" id="accountRoot" style="padding-bottom:80px;"></div>
 
-  <div class="cart-layout" style="grid-template-columns: 420px 1fr;">
-    <div class="form-card">
-      <h3>Add New Product</h3>
-      <form id="productForm">
-        <div class="field"><label>Product Name</label><input type="text" id="pName" required></div>
-
-        <div class="field-row">
-          <div class="field">
-            <label>Category</label>
-            <select id="pCategory" required>
-              <option value="anime">Anime</option>
-              <option value="tees">Tees</option>
-              <option value="hoodies">Hoodies</option>
-              <option value="sweatshirts">Sweatshirts</option>
-              <option value="accessories">Accessories</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Garment Type</label>
-            <select id="pKind">
-              <option value="tee">Tee</option>
-              <option value="hoodie">Hoodie</option>
-              <option value="tote">Tote</option>
-              <option value="cap">Cap</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field"><label>Price (₹)</label><input type="number" id="pPrice" required min="0"></div>
-          <div class="field"><label>Old Price (optional)</label><input type="number" id="pOldPrice" min="0"></div>
-        </div>
-
-        <div class="field">
-          <label>Badge (optional)</label>
-          <select id="pBadge">
-            <option value="">None</option>
-            <option value="New Drop">New Drop</option>
-            <option value="Bestseller">Bestseller</option>
-            <option value="Sale">Sale</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Sizes (comma separated)</label>
-          <input type="text" id="pSizes" value="S,M,L,XL" required>
-        </div>
-
-        <div class="field">
-          <label>Product Photo (upload — becomes the mockup shown to customers)</label>
-          <input type="file" id="pImageFile" accept="image/*">
-        </div>
-        <div class="field">
-          <label>Or paste an image URL instead</label>
-          <input type="text" id="pImageUrl" placeholder="https://...">
-        </div>
-        <div id="imgPreviewWrap" style="display:none; margin-bottom:16px;">
-          <div class="pd-thumb" style="width:76px;height:76px;"><img id="imgPreview" style="width:100%;height:100%;object-fit:cover;"></div>
-        </div>
-
-        <div class="field"><label>Description</label><input type="text" id="pDesc" placeholder="Fabric, fit, print details..."></div>
-
-        <button type="submit" class="btn btn-primary btn-block btn-lg">Add Product</button>
-      </form>
-    </div>
-
-    <div>
-      <div class="filter-bar" style="border-bottom:none; padding-top:0;">
-        <h3 style="font-family:var(--font-display); text-transform:uppercase; font-size:16px;">Your Products (<span id="countLabel">0</span> custom)</h3>
-        <button class="btn btn-outline" id="logoutBtn">Log Out</button>
-      </div>
-      <div class="product-grid" id="adminGrid"></div>
-    </div>
-  </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <script src="data.js"></script>
+<script src="supabase-client.js"></script>
 <script src="app.js"></script>
 <script>
-  const gate = document.getElementById('gate');
-  const panel = document.getElementById('panel');
+  const user = getUser();
+  const root = document.getElementById('accountRoot');
 
-  function showPanel() {
-    gate.style.display = 'none';
-    panel.style.display = 'block';
-    renderAdminGrid();
-  }
+  if (!user) {
+    root.innerHTML = `<div class="empty-state">
+      <h3>You're not logged in</h3>
+      <p>Log in to view your orders and saved address.</p>
+      <a href="login.html" class="btn btn-primary" style="margin-top:20px;">Log In</a>
+    </div>`;
+  } else {
+    const order = JSON.parse(localStorage.getItem('hogalalla_last_order') || 'null');
+    const addr = getAddress();
 
-  if (isAdmin()) showPanel();
+    root.innerHTML = `
+      <div class="cart-layout">
+        <div>
+          <div class="form-card" style="margin-bottom:20px;">
+            <h3>Profile</h3>
+            <div class="summary-row"><span>Name</span><span>${user.name || '—'}</span></div>
+            <div class="summary-row"><span>Login method</span><span style="text-transform:capitalize;">${user.method}</span></div>
+            ${user.email ? `<div class="summary-row"><span>Email</span><span>${user.email}</span></div>` : ''}
+            ${user.phone ? `<div class="summary-row"><span>Phone</span><span>${user.phone}</span></div>` : ''}
+          </div>
 
-  document.getElementById('pwSubmit').addEventListener('click', tryLogin);
-  document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
-  function tryLogin() {
-    const pass = document.getElementById('pwInput').value;
-    if (adminLogin(pass)) showPanel();
-    else showToast('Wrong password');
-  }
-  document.getElementById('logoutBtn').addEventListener('click', () => { adminLogout(); location.reload(); });
-
-  let uploadedImage = '';
-  document.getElementById('pImageFile').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      uploadedImage = ev.target.result;
-      document.getElementById('pImageUrl').value = '';
-      document.getElementById('imgPreview').src = uploadedImage;
-      document.getElementById('imgPreviewWrap').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  });
-  document.getElementById('pImageUrl').addEventListener('input', e => {
-    if (e.target.value) {
-      uploadedImage = '';
-      document.getElementById('imgPreview').src = e.target.value;
-      document.getElementById('imgPreviewWrap').style.display = 'block';
-    }
-  });
-
-  document.getElementById('productForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const image = uploadedImage || document.getElementById('pImageUrl').value || '';
-    const product = {
-      id: 'custom-' + Date.now(),
-      name: document.getElementById('pName').value,
-      category: document.getElementById('pCategory').value,
-      kind: document.getElementById('pKind').value,
-      price: Number(document.getElementById('pPrice').value),
-      oldPrice: document.getElementById('pOldPrice').value ? Number(document.getElementById('pOldPrice').value) : null,
-      badge: document.getElementById('pBadge').value || null,
-      sizes: document.getElementById('pSizes').value.split(',').map(s => s.trim()).filter(Boolean),
-      colors: ['#0B0D12'],
-      accent: '#38BDF8',
-      graphic: 'circle',
-      desc: document.getElementById('pDesc').value || 'No description added yet.'
-    };
-    if (image) { product.image = image; product.images = [image]; }
-
-    addCustomProduct(product);
-    showToast('Product added');
-    e.target.reset();
-    document.getElementById('imgPreviewWrap').style.display = 'none';
-    uploadedImage = '';
-    renderAdminGrid();
-  });
-
-  function renderAdminGrid() {
-    const custom = getCustomProducts();
-    document.getElementById('countLabel').textContent = custom.length;
-    const grid = document.getElementById('adminGrid');
-    if (custom.length === 0) {
-      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>No custom products yet</h3><p>Add your first one using the form.</p></div>`;
-      return;
-    }
-    grid.innerHTML = custom.map(p => `
-      <div class="card">
-        <div class="card-media">
-          ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
-          <img src="${p.image}" alt="${p.name}">
+          <div class="form-card">
+            <h3>Order History</h3>
+            ${order ? `
+              <div class="cart-item" style="grid-template-columns:1fr auto;">
+                <div class="cart-item-info">
+                  <h4>Order ${order.id}</h4>
+                  <div class="meta">${order.cart.length} item(s) · Delivering to ${order.address.city}</div>
+                </div>
+                <div class="cart-item-right">
+                  <span class="tag">Processing</span>
+                  <span class="price">${formatINR(order.total)}</span>
+                </div>
+              </div>
+            ` : `<p style="color:var(--muted); font-size:14px;">No orders yet. <a href="shop.html" style="color:var(--sky);">Start shopping →</a></p>`}
+          </div>
         </div>
-        <div class="card-body">
-          <span class="card-cat">${p.category}</span>
-          <h4>${p.name}</h4>
-          <div class="card-price-row"><span class="price">${formatINR(p.price)}</span></div>
-        </div>
-        <div class="card-actions">
-          <a href="product.html?id=${p.id}" class="btn btn-outline">Preview</a>
-          <button class="btn btn-primary" style="background:var(--danger); color:#fff;" data-del="${p.id}">Delete</button>
-        </div>
-      </div>`).join('');
 
-    grid.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => {
-      deleteCustomProduct(btn.dataset.del);
-      renderAdminGrid();
-      showToast('Product removed');
-    }));
+        <div class="summary-card">
+          <h3>Saved Address</h3>
+          ${addr ? `
+            <p style="font-size:14px; color:var(--ink); line-height:1.7;">
+              ${addr.fullName}<br>
+              ${addr.addr1}${addr.addr2 ? ', ' + addr.addr2 : ''}<br>
+              ${addr.city}, ${addr.state} ${addr.pincode}<br>
+              ${addr.country}<br>
+              ${addr.phone}
+            </p>
+          ` : `<p style="color:var(--muted); font-size:14px;">No address saved yet.</p>`}
+          <button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="logout()">Log Out</button>
+        </div>
+      </div>
+    `;
   }
 </script>
 </body>
