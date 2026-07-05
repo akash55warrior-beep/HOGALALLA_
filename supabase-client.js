@@ -76,7 +76,8 @@ async function deleteProductFromDB(id) {
 
 async function uploadProductImage(file) {
   if (!sb) return null;
-  const fileName = `products/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  const fileName = `products/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const { error } = await sb.storage.from('product-images').upload(fileName, file);
   if (error) { console.error('uploadProductImage', error); showToast('Image upload failed'); return null; }
   const { data } = sb.storage.from('product-images').getPublicUrl(fileName);
