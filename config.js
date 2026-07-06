@@ -8,5 +8,5 @@
    Leave both as empty strings to run the site in local demo mode
    (products/reviews stay in your browser only, nothing is shared).
    ============================================ */
-const SUPABASE_URL = '';
-const SUPABASE_ANON_KEY = '';
+const SUPABASE_URL = 'https://wtymfzpqxopafpuigqyr.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_cpDBDoHT96Qi1ruo4nMpMg_jQDhEwFb';
