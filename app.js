@@ -64,7 +64,10 @@ function getUser() {
 function setUser(user) {
   localStorage.setItem(AUTH_KEY, JSON.stringify(user));
 }
-function logout() {
+async function logout() {
+  if (typeof isDBConnected === 'function' && isDBConnected()) {
+    try { await sb.auth.signOut(); } catch (e) { console.error(e); }
+  }
   localStorage.removeItem(AUTH_KEY);
   window.location.href = 'index.html';
 }

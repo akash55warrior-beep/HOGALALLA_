@@ -56,20 +56,28 @@
   <p class="auth-switch">By continuing you agree to HOGALALLA's <a href="about.html">Terms</a> & Privacy Policy</p>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <script src="data.js"></script>
+<script src="supabase-client.js"></script>
 <script src="app.js"></script>
 <script>
   /* -----------------------------------------------------------
-     INTEGRATION POINT:
-     Google  -> supabase.auth.signInWithOAuth({ provider: 'google' })
-     Phone   -> supabase.auth.signInWithOtp({ phone })
-                then supabase.auth.verifyOtp({ phone, token, type: 'sms' })
-     This demo just mocks a logged-in session in localStorage.
+     Google login now uses real Supabase Auth (if connected).
+     Phone OTP below is still a demo/mock — real SMS OTP needs a
+     paid SMS provider wired into Supabase (e.g. Twilio), which
+     isn't set up yet. Ask for help when you're ready for that.
   ----------------------------------------------------------- */
-  document.getElementById('googleBtn').addEventListener('click', () => {
-    setUser({ name: 'Google User', method: 'google', email: 'you@gmail.com' });
-    showToast('Logged in with Google');
-    setTimeout(() => window.location.href = 'account.html', 700);
+  document.getElementById('googleBtn').addEventListener('click', async () => {
+    if (!isDBConnected()) {
+      showToast('Connect your database first — see Admin → API & Database');
+      return;
+    }
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/account.html' }
+    });
+    if (error) { console.error(error); showToast('Google login failed'); }
   });
 
   document.getElementById('sendOtpBtn').addEventListener('click', () => {
