@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — HOGALALLA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
+    <ul class="nav-links"><li><a href="shop.html">Continue Shopping</a></li></ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="icon-btn" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap" style="max-width:600px; padding:80px 24px;">
+  <div class="form-card" style="text-align:center; padding:48px 30px;">
+    <div style="width:56px;height:56px;border-radius:50%;background:rgba(56,189,248,0.12);border:1.5px solid var(--sky);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1 style="font-family:var(--font-display); font-size:26px; text-transform:uppercase; margin-bottom:10px;">Order Placed</h1>
+    <p style="color:var(--muted); margin-bottom:28px;">Thanks for ordering from HOGALALLA. Your print is heading to production.</p>
+    <div id="orderDetails" style="text-align:left; border-top:1px solid var(--line); padding-top:24px;"></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  const order = JSON.parse(localStorage.getItem('hogalalla_last_order') || 'null');
+  const el = document.getElementById('orderDetails');
+  if (!order) {
+    el.innerHTML = `<p style="color:var(--muted);">No recent order found.</p>`;
+  } else {
+    el.innerHTML = `
+      <div class="summary-row"><span>Order ID</span><span>${order.id}</span></div>
+      <div class="summary-row"><span>Delivering to</span><span>${order.address.city}, ${order.address.state}</span></div>
+      <div class="summary-row total"><span>Total Paid</span><span>${formatINR(order.total)}</span></div>
+    `;
+  }
+</script>
+</body>
+</html>
