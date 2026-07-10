@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Product — HOGALALLA</title>
+<title>Login — HOGALALLA</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,96 +11,50 @@
 <nav class="nav">
   <div class="wrap nav-inner">
     <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="shop.html?cat=anime">Anime</a></li>
-      <li><a href="shop.html?cat=tees">Tees</a></li>
-      <li><a href="shop.html?cat=hoodies">Hoodies</a></li>
-      <li><a href="shop.html?cat=sweatshirts">Sweatshirts</a></li>
-      <li><a href="shop.html">All</a></li>
-    </ul>
+    <ul class="nav-links"><li><a href="shop.html">Continue Shopping</a></li></ul>
     <div class="nav-actions">
-      <a href="account.html" class="icon-btn" data-nav="account" title="Account">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-      </a>
       <a href="cart.html" class="icon-btn" title="Cart">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
         <span class="cart-count">0</span>
       </a>
-      <button class="nav-toggle icon-btn" aria-label="Menu">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
     </div>
   </div>
 </nav>
 
-<div class="wrap">
-  <div class="breadcrumb" style="padding-top:28px;"><a href="index.html">Home</a> / <a href="shop.html" id="crumbCat">Shop</a> / <span id="crumbName">Product</span></div>
+<div class="wrap auth-shell">
+  <div class="auth-head">
+    <h1>Welcome Back</h1>
+    <p>Log in to track orders and check out faster</p>
+  </div>
 
-  <div class="pd-grid" id="pdRoot"></div>
+  <div class="form-card">
+    <button class="oauth-btn" id="googleBtn">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.5-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.2 5.2C40.9 36 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+      Continue with Google
+    </button>
 
-  <div class="section" style="padding-top:0; border-top:1px solid var(--line);">
-    <div class="section-head">
-      <h2>Reviews</h2>
-      <div id="ratingSummary" style="color:var(--muted); font-size:14px;"></div>
-    </div>
-    <div class="cart-layout" style="grid-template-columns: 1fr 380px;">
-      <div id="reviewsList"></div>
-      <div class="form-card">
-        <h3>Write a Review</h3>
-        <div class="field">
-          <label>Your Rating</label>
-          <div id="starPicker" style="display:flex; gap:6px; font-size:26px; cursor:pointer;"></div>
-        </div>
-        <div class="field"><label>Name</label><input type="text" id="revName"></div>
-        <div class="field"><label>Comment</label><input type="text" id="revComment" placeholder="How was it?"></div>
-        <button class="btn btn-primary btn-block" id="submitReviewBtn">Submit Review</button>
+    <div class="divider">Or</div>
+
+    <div id="phoneStep">
+      <div class="field">
+        <label>Mobile Number</label>
+        <input type="tel" id="phoneInput" placeholder="+91 98765 43210">
       </div>
+      <button class="btn btn-primary btn-block" id="sendOtpBtn">Send OTP</button>
+    </div>
+
+    <div id="otpStep" style="display:none;">
+      <div class="field">
+        <label>Enter OTP sent to <span id="phoneDisplay"></span></label>
+        <input type="text" id="otpInput" maxlength="6" placeholder="6-digit code">
+      </div>
+      <button class="btn btn-primary btn-block" id="verifyOtpBtn">Verify & Login</button>
+      <button class="btn btn-outline btn-block" id="backBtn" style="margin-top:10px;">Use a different number</button>
     </div>
   </div>
 
-  <div class="section" style="padding-top:0;">
-    <div class="section-head"><h2>You may also like</h2></div>
-    <div class="product-grid" id="relatedGrid"></div>
-  </div>
+  <p class="auth-switch">By continuing you agree to HOGALALLA's <a href="about.html">Terms</a> & Privacy Policy</p>
 </div>
-
-<footer class="footer">
-  <div class="wrap">
-    <div class="footer-grid">
-      <div>
-        <div class="logo" style="margin-bottom:14px;">HOGA<span>LALLA</span></div>
-        <p class="desc">Independent streetwear label. Designed in-house, printed and shipped on demand.</p>
-      </div>
-      <div>
-        <h5>Shop</h5>
-        <div class="footer-links">
-          <a href="shop.html?cat=anime">Anime</a>
-          <a href="shop.html?cat=tees">Tees</a>
-          <a href="shop.html?cat=hoodies">Hoodies</a>
-          <a href="shop.html?cat=sweatshirts">Sweatshirts</a>
-        </div>
-      </div>
-      <div>
-        <h5>Help</h5>
-        <div class="footer-links">
-          <a href="about.html">About</a>
-          <a href="contact.html">Contact</a>
-          <a href="account.html">Track Order</a>
-        </div>
-      </div>
-      <div>
-        <h5>Newsletter</h5>
-        <div class="field"><input type="email" placeholder="you@email.com"></div>
-        <button class="btn btn-primary btn-block" onclick="showToast('Subscribed')">Subscribe</button>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 HOGALALLA. All rights reserved.</span>
-      <span>Made on demand · Fulfilled via Printify</span>
-    </div>
-  </div>
-</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
@@ -108,173 +62,44 @@
 <script src="supabase-client.js"></script>
 <script src="app.js"></script>
 <script>
-  const params = new URLSearchParams(window.location.search);
-  let product, selectedSize, selectedColorIdx = 0, qty = 1, currentRating = 5;
-
-  function renderPD() {
-    document.getElementById('pdRoot').innerHTML = `
-      <div>
-        <div class="pd-gallery-main"><img src="${product.images[selectedColorIdx]}" alt="${product.name}"></div>
-        <div class="pd-thumbs">
-          ${product.images.map((img, i) => `<div class="pd-thumb ${i === selectedColorIdx ? 'active' : ''}" data-idx="${i}"><img src="${img}"></div>`).join('')}
-        </div>
-      </div>
-      <div class="pd-info">
-        <span class="card-cat">${product.category}</span>
-        <h1>${product.name}</h1>
-        <div class="pd-price">
-          <span class="price">${formatINR(product.price)}</span>
-          ${product.oldPrice ? `<span class="price-old">${formatINR(product.oldPrice)}</span>` : ''}
-          ${product.badge ? `<span class="tag">${product.badge}</span>` : ''}
-        </div>
-        <p class="pd-desc">${product.desc}</p>
-
-        <div class="option-group">
-          <div class="option-label"><span>Size</span><a href="#" style="color:var(--sky);" id="sizeGuideLink">Size guide</a></div>
-          <div class="option-row" id="sizeRow">
-            ${product.sizes.map(s => `<button class="opt-btn ${s === selectedSize ? 'active' : ''}" data-size="${s}">${s}</button>`).join('')}
-          </div>
-        </div>
-
-        <div class="option-group">
-          <div class="option-label"><span>Colour</span></div>
-          <div class="option-row" id="colorRow">
-            ${product.colors.map((c, i) => `<button class="opt-btn ${i === selectedColorIdx ? 'active' : ''}" data-color-idx="${i}" style="border-color:${i === selectedColorIdx ? 'var(--sky)' : 'var(--line)'};"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${c};margin-right:6px;vertical-align:middle;border:1px solid var(--line);"></span>${i === 0 ? 'Black' : 'Blue'}</button>`).join('')}
-          </div>
-        </div>
-
-        <div class="qty-row">
-          <span class="option-label" style="margin:0;">Quantity</span>
-          <div class="qty-control">
-            <button id="qtyMinus">−</button>
-            <span id="qtyVal">${qty}</span>
-            <button id="qtyPlus">+</button>
-          </div>
-        </div>
-
-        <div class="pd-buy-row">
-          <button class="btn btn-outline btn-lg" style="flex:1;" id="addCartBtn">Add to Cart</button>
-          <button class="btn btn-primary btn-lg" style="flex:1;" id="buyNowBtn">Buy Now</button>
-        </div>
-
-        <div class="pd-meta">
-          <div><strong>Fulfilment:</strong> Printed to order, ships in 3–5 business days via Printify.</div>
-          <div><strong>Returns:</strong> Free size exchange within 7 days of delivery.</div>
-          <div><strong>Material:</strong> Premium cotton blend, screen/DTG printed.</div>
-        </div>
-      </div>`;
-
-    document.getElementById('sizeRow').addEventListener('click', e => {
-      const btn = e.target.closest('.opt-btn');
-      if (!btn) return;
-      selectedSize = btn.dataset.size;
-      renderPD();
-    });
-    document.getElementById('colorRow').addEventListener('click', e => {
-      const btn = e.target.closest('.opt-btn');
-      if (!btn) return;
-      selectedColorIdx = Number(btn.dataset.colorIdx);
-      renderPD();
-    });
-    document.querySelectorAll('.pd-thumb').forEach(t => t.addEventListener('click', () => {
-      selectedColorIdx = Number(t.dataset.idx);
-      renderPD();
-    }));
-    document.getElementById('qtyMinus').addEventListener('click', () => { qty = Math.max(1, qty - 1); renderPD(); });
-    document.getElementById('qtyPlus').addEventListener('click', () => { qty += 1; renderPD(); });
-    document.getElementById('addCartBtn').addEventListener('click', () => addToCart(product.id, selectedSize, product.colors[selectedColorIdx], qty));
-    document.getElementById('buyNowBtn').addEventListener('click', () => {
-      addToCart(product.id, selectedSize, product.colors[selectedColorIdx], qty);
-      window.location.href = 'cart.html';
-    });
-    document.getElementById('sizeGuideLink').addEventListener('click', e => { e.preventDefault(); showToast('Size guide: true to size, oversized fit runs 1 size large'); });
-  }
-
-  function starsHTML(rating, size = 16) {
-    let out = '';
-    for (let i = 1; i <= 5; i++) {
-      out += `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${i <= Math.round(rating) ? '#38BDF8' : 'none'}" stroke="#38BDF8" stroke-width="1.5"><polygon points="12 2 15 9 22 9 16.5 13.5 18.5 21 12 16.5 5.5 21 7.5 13.5 2 9 9 9"/></svg>`;
-    }
-    return out;
-  }
-
-  function renderStarPicker() {
-    const el = document.getElementById('starPicker');
-    el.innerHTML = [1,2,3,4,5].map(i => `<span data-star="${i}" style="color:${i <= currentRating ? '#38BDF8' : '#262B36'};">★</span>`).join('');
-    el.querySelectorAll('[data-star]').forEach(s => s.addEventListener('click', () => {
-      currentRating = Number(s.dataset.star);
-      renderStarPicker();
-    }));
-  }
-
-  async function renderReviews() {
+  /* -----------------------------------------------------------
+     Google login now uses real Supabase Auth (if connected).
+     Phone OTP below is still a demo/mock — real SMS OTP needs a
+     paid SMS provider wired into Supabase (e.g. Twilio), which
+     isn't set up yet. Ask for help when you're ready for that.
+  ----------------------------------------------------------- */
+  document.getElementById('googleBtn').addEventListener('click', async () => {
     if (!isDBConnected()) {
-      document.getElementById('ratingSummary').innerHTML = '';
-      document.getElementById('reviewsList').innerHTML = `<div class="form-card"><p style="color:var(--muted); font-size:14px;">Reviews need the database connected to work — see <strong>Admin → API & Database</strong>. Once connected, customer reviews will show here for everyone.</p></div>`;
+      showToast('Connect your database first — see Admin → API & Database');
       return;
     }
-    const reviews = await fetchReviews(product.id);
-    const avg = averageRating(reviews);
-    document.getElementById('ratingSummary').innerHTML = reviews.length
-      ? `<div style="display:flex; align-items:center; gap:8px;">${starsHTML(avg, 18)}<span style="color:var(--ink); font-weight:600;">${avg.toFixed(1)}</span><span>(${reviews.length} review${reviews.length > 1 ? 's' : ''})</span></div>`
-      : 'No reviews yet — be the first!';
-    document.getElementById('reviewsList').innerHTML = reviews.length
-      ? reviews.map(r => `
-        <div class="form-card" style="margin-bottom:12px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <strong>${r.name}</strong>
-            <div>${starsHTML(r.rating, 14)}</div>
-          </div>
-          <p style="color:var(--muted); font-size:14px;">${r.comment || ''}</p>
-        </div>`).join('')
-      : `<div class="form-card"><p style="color:var(--muted); font-size:14px;">No reviews yet for this product.</p></div>`;
-  }
-
-  document.getElementById('submitReviewBtn').addEventListener('click', async () => {
-    const name = document.getElementById('revName').value.trim();
-    const comment = document.getElementById('revComment').value.trim();
-    if (!name) { showToast('Enter your name'); return; }
-    const result = await addReview(product.id, { name, rating: currentRating, comment });
-    if (result) {
-      showToast('Review submitted');
-      document.getElementById('revName').value = '';
-      document.getElementById('revComment').value = '';
-      currentRating = 5;
-      renderStarPicker();
-      renderReviews();
-    }
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/account.html' }
+    });
+    if (error) { console.error(error); showToast('Google login failed'); }
   });
 
-  loadAllProducts().then(() => {
-    product = getProduct(params.get('id')) || PRODUCTS[0];
-    if (!product) return;
-    selectedSize = product.sizes[1] || product.sizes[0];
+  document.getElementById('sendOtpBtn').addEventListener('click', () => {
+    const phone = document.getElementById('phoneInput').value.trim();
+    if (!phone) { showToast('Enter your mobile number'); return; }
+    document.getElementById('phoneDisplay').textContent = phone;
+    document.getElementById('phoneStep').style.display = 'none';
+    document.getElementById('otpStep').style.display = 'block';
+    showToast('OTP sent (demo: use 123456)');
+  });
 
-    document.getElementById('crumbCat').textContent = product.category;
-    document.getElementById('crumbCat').href = `shop.html?cat=${product.category}`;
-    document.getElementById('crumbName').textContent = product.name;
-    document.title = product.name + ' — HOGALALLA';
+  document.getElementById('verifyOtpBtn').addEventListener('click', () => {
+    const otp = document.getElementById('otpInput').value.trim();
+    if (otp.length < 4) { showToast('Enter a valid OTP'); return; }
+    setUser({ name: 'Guest', method: 'phone', phone: document.getElementById('phoneInput').value });
+    showToast('Logged in');
+    setTimeout(() => window.location.href = 'account.html', 700);
+  });
 
-    renderPD();
-    renderStarPicker();
-    renderReviews();
-
-    const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
-    document.getElementById('relatedGrid').innerHTML = related.map(p => `
-      <div class="card">
-        <a href="product.html?id=${p.id}" class="card-media">
-          ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
-          <img src="${p.image}" alt="${p.name}">
-        </a>
-        <div class="card-body">
-          <a href="product.html?id=${p.id}"><span class="card-cat">${p.category}</span><h4>${p.name}</h4></a>
-          <div class="card-price-row"><span class="price">${formatINR(p.price)}</span></div>
-        </div>
-        <div class="card-actions">
-          <a href="product.html?id=${p.id}" class="btn btn-outline">View</a>
-          <button class="btn btn-primary" onclick="addToCart('${p.id}','${p.sizes[1]||p.sizes[0]}','${p.colors[0]}')">Buy Now</button>
-        </div>
-      </div>`).join('');
+  document.getElementById('backBtn').addEventListener('click', () => {
+    document.getElementById('otpStep').style.display = 'none';
+    document.getElementById('phoneStep').style.display = 'block';
   });
 </script>
 </body>

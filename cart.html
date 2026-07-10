@@ -64,7 +64,10 @@ function getUser() {
 function setUser(user) {
   localStorage.setItem(AUTH_KEY, JSON.stringify(user));
 }
-function logout() {
+async function logout() {
+  if (typeof isDBConnected === 'function' && isDBConnected()) {
+    try { await sb.auth.signOut(); } catch (e) { console.error(e); }
+  }
   localStorage.removeItem(AUTH_KEY);
   window.location.href = 'index.html';
 }
@@ -160,6 +163,38 @@ function adminLogin(pass) {
   return false;
 }
 function adminLogout() { sessionStorage.removeItem(ADMIN_SESSION_KEY); }
+
+/* ---------- Buy Now → WhatsApp ----------
+   Since real checkout/payment isn't connected yet, "Buy Now" opens
+   WhatsApp with the order details pre-filled — customer just hits
+   send, no typing needed. Your number is set in config.js. */
+function buyNowWhatsApp(productId, size, color, qty) {
+  qty = qty || 1;
+  const p = typeof getProduct === 'function' ? getProduct(productId) : null;
+  if (!p) { showToast('Product not found'); return; }
+  if (typeof WHATSAPP_NUMBER === 'undefined' || !WHATSAPP_NUMBER) {
+    showToast('Add your WhatsApp number in config.js first');
+    return;
+  }
+
+  const colorIdx = p.colors ? p.colors.indexOf(color) : -1;
+  const colorLabel = colorIdx === 0 ? 'Black' : (colorIdx === 1 ? 'Blue' : '');
+  const link = window.location.origin + '/product.html?id=' + p.id;
+
+  const lines = [
+    `Hi HOGALALLA! I'd like to order:`,
+    ``,
+    `*${p.name}*`,
+    `Size: ${size}${colorLabel ? ' | Colour: ' + colorLabel : ''}`,
+    `Qty: ${qty}`,
+    `Price: ${formatINR(p.price * qty)}`,
+    ``,
+    `Product link (photo + details): ${link}`
+  ];
+  const message = lines.join('\n');
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   updateCartBadge();

@@ -1,123 +1,151 @@
-/* ============================================
-   HOGALALLA — Supabase data layer
-   All product + review reads/writes go through here.
-   If SUPABASE_URL / SUPABASE_ANON_KEY (config.js) are empty,
-   every function below quietly no-ops and the site falls back
-   to the local demo catalog in data.js.
-   ============================================ */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — HOGALALLA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-/* Config priority: values saved via Admin → API & Database (localStorage)
-   override the SUPABASE_URL / SUPABASE_ANON_KEY constants in config.js.
-   Either method works — the admin panel is just faster since it needs
-   no file editing or redeploy. */
-function getActiveSupabaseUrl() { return localStorage.getItem('hogalalla_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : ''); }
-function getActiveSupabaseKey() { return localStorage.getItem('hogalalla_supabase_key') || (typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : ''); }
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html?cat=anime">Anime</a></li>
+      <li><a href="shop.html?cat=tees">Tees</a></li>
+      <li><a href="shop.html?cat=hoodies">Hoodies</a></li>
+      <li><a href="shop.html?cat=sweatshirts">Sweatshirts</a></li>
+      <li><a href="shop.html" class="active">All</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="account.html" class="icon-btn" data-nav="account" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </a>
+      <a href="cart.html" class="icon-btn" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-toggle icon-btn" aria-label="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
 
-let sb = null;
-const _sbUrl = getActiveSupabaseUrl();
-const _sbKey = getActiveSupabaseKey();
-if (_sbUrl && _sbKey) {
-  try { sb = supabase.createClient(_sbUrl, _sbKey); }
-  catch (e) { console.error('Supabase init failed', e); }
-}
-function isDBConnected() { return !!sb; }
+<div class="wrap page-head">
+  <div class="breadcrumb"><a href="index.html">Home</a> / <span id="crumbCat">Shop</span></div>
+  <h1 class="page-title" id="pageTitle">All Products</h1>
+</div>
 
-/* ---------- Products ---------- */
-function rowToProduct(row) {
-  return {
-    id: row.id,
-    name: row.name,
-    category: row.category,
-    price: row.price,
-    oldPrice: row.old_price,
-    badge: row.badge,
-    sizes: row.sizes || ['S', 'M', 'L', 'XL'],
-    colors: ['#0B0D12'],
-    accent: '#38BDF8',
-    graphic: row.graphic || 'circle',
-    kind: row.kind || 'tee',
-    desc: row.description || '',
-    image: row.image_url || '',
-    images: row.image_url ? [row.image_url] : [],
-    _db: true
-  };
-}
+<div class="wrap">
+  <div class="filter-bar">
+    <div class="chip-row" id="chipRow"></div>
+    <select class="sort-select" id="sortSelect">
+      <option value="default">Sort: Featured</option>
+      <option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option>
+    </select>
+  </div>
+  <div class="product-grid" id="grid"></div>
+</div>
 
-async function fetchProductsFromDB() {
-  if (!sb) return [];
-  const { data, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
-  if (error) { console.error('fetchProductsFromDB', error); return []; }
-  return data.map(rowToProduct);
-}
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:14px;">HOGA<span>LALLA</span></div>
+        <p class="desc">Independent streetwear label. Designed in-house, printed and shipped on demand.</p>
+      </div>
+      <div>
+        <h5>Shop</h5>
+        <div class="footer-links">
+          <a href="shop.html?cat=anime">Anime</a>
+          <a href="shop.html?cat=tees">Tees</a>
+          <a href="shop.html?cat=hoodies">Hoodies</a>
+          <a href="shop.html?cat=sweatshirts">Sweatshirts</a>
+          <a href="shop.html?cat=accessories">Accessories</a>
+        </div>
+      </div>
+      <div>
+        <h5>Help</h5>
+        <div class="footer-links">
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="account.html">Track Order</a>
+        </div>
+      </div>
+      <div>
+        <h5>Newsletter</h5>
+        <p class="desc" style="margin-bottom:12px;">Get notified when a new print drops.</p>
+        <div class="field"><input type="email" placeholder="you@email.com"></div>
+        <button class="btn btn-primary btn-block" onclick="showToast('Subscribed')">Subscribe</button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 HOGALALLA. All rights reserved.</span>
+      <span>Made on demand · Fulfilled via Printify</span>
+    </div>
+  </div>
+</footer>
 
-async function addProductToDB(product) {
-  if (!sb) { showToast('Connect your database first — see Admin → API & Database'); return null; }
-  const { data, error } = await sb.from('products').insert([{
-    name: product.name,
-    category: product.category,
-    price: product.price,
-    old_price: product.oldPrice,
-    badge: product.badge,
-    sizes: product.sizes,
-    image_url: product.image,
-    description: product.desc,
-    kind: product.kind,
-    graphic: product.graphic
-  }]).select();
-  if (error) { console.error('addProductToDB', error); showToast('Could not save product'); return null; }
-  return data[0];
-}
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="supabase-client.js"></script>
+<script src="app.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  let activeCat = params.get('cat') || 'all';
+  let activeSort = 'default';
 
-async function deleteProductFromDB(id) {
-  if (!sb) return;
-  const { error } = await sb.from('products').delete().eq('id', id);
-  if (error) console.error('deleteProductFromDB', error);
-}
+  const chipRow = document.getElementById('chipRow');
+  const allChips = [{ id: 'all', label: 'All' }, ...CATEGORIES.map(c => ({ id: c.id, label: c.label }))];
+  chipRow.innerHTML = allChips.map(c => `<button class="chip ${c.id === activeCat ? 'active' : ''}" data-cat="${c.id}">${c.label}</button>`).join('');
 
-async function uploadProductImage(file) {
-  if (!sb) return null;
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
-  const fileName = `products/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-  const { error } = await sb.storage.from('product-images').upload(fileName, file);
-  if (error) { console.error('uploadProductImage', error); showToast('Image upload failed'); return null; }
-  const { data } = sb.storage.from('product-images').getPublicUrl(fileName);
-  return data.publicUrl;
-}
+  chipRow.addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    activeCat = btn.dataset.cat;
+    chipRow.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c === btn));
+    render();
+  });
 
-/* ---------- Reviews ---------- */
-async function fetchReviews(productId) {
-  if (!sb) return [];
-  const { data, error } = await sb.from('reviews').select('*').eq('product_id', productId).order('created_at', { ascending: false });
-  if (error) { console.error('fetchReviews', error); return []; }
-  return data;
-}
+  document.getElementById('sortSelect').addEventListener('change', e => {
+    activeSort = e.target.value;
+    render();
+  });
 
-async function addReview(productId, review) {
-  if (!sb) { showToast('Reviews need the database connected — see Admin → API & Database'); return null; }
-  const { data, error } = await sb.from('reviews').insert([{
-    product_id: productId, name: review.name, rating: review.rating, comment: review.comment
-  }]).select();
-  if (error) { console.error('addReview', error); showToast('Could not submit review'); return null; }
-  return data[0];
-}
+  function render() {
+    let items = getProductsByCategory(activeCat);
+    if (activeSort === 'low') items = [...items].sort((a, b) => a.price - b.price);
+    if (activeSort === 'high') items = [...items].sort((a, b) => b.price - a.price);
 
-function averageRating(reviews) {
-  if (!reviews.length) return 0;
-  return reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
-}
+    const catObj = CATEGORIES.find(c => c.id === activeCat);
+    document.getElementById('pageTitle').textContent = catObj ? catObj.label : 'All Products';
+    document.getElementById('crumbCat').textContent = catObj ? catObj.label : 'Shop';
 
-/* ---------- Master product loader ----------
-   Call this once per page, before rendering anything that
-   reads PRODUCTS. Falls back to the built-in demo catalog +
-   any locally-added admin products if no database is connected. */
-async function loadAllProducts() {
-  if (typeof mergeCustomProducts === 'function') mergeCustomProducts();
-  if (isDBConnected()) {
-    const dbProducts = await fetchProductsFromDB();
-    if (dbProducts.length) {
-      PRODUCTS.length = 0;
-      dbProducts.forEach(p => PRODUCTS.push(p));
-    }
+    document.getElementById('grid').innerHTML = items.map(p => `
+      <div class="card">
+        <a href="product.html?id=${p.id}" class="card-media">
+          ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
+          <img src="${p.image}" alt="${p.name}">
+        </a>
+        <div class="card-body">
+          <a href="product.html?id=${p.id}"><span class="card-cat">${p.category}</span><h4>${p.name}</h4></a>
+          <div class="card-price-row">
+            <span><span class="price">${formatINR(p.price)}</span>${p.oldPrice ? `<span class="price-old">${formatINR(p.oldPrice)}</span>` : ''}</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="product.html?id=${p.id}" class="btn btn-outline">View</a>
+          <button class="btn btn-primary" onclick="buyNowWhatsApp('${p.id}','${p.sizes[1] || p.sizes[0]}','${p.colors[0]}',1)">Buy Now</button>
+        </div>
+      </div>`).join('') || `<div class="empty-state"><h3>No products here yet</h3><p>Check back soon for this category.</p></div>`;
   }
-  return PRODUCTS;
-}
+
+  loadAllProducts().then(render);
+</script>
+</body>
+</html>

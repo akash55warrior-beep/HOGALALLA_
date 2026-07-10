@@ -1,12 +1,127 @@
-/* ============================================
-   HOGALALLA — Configuration
-   Paste your Supabase project details below.
-   Get these from: Supabase Dashboard → Project → Settings → API
-   - SUPABASE_URL     → "Project URL"
-   - SUPABASE_ANON_KEY → "anon public" key (safe to expose in frontend —
-     this is what Supabase's Row Level Security policies are for)
-   Leave both as empty strings to run the site in local demo mode
-   (products/reviews stay in your browser only, nothing is shared).
-   ============================================ */
-const SUPABASE_URL = 'https://wtymfzpqxopafpuigqyr.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_cpDBDoHT96Qi1ruo4nMpMg_jQDhEwFb';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — HOGALALLA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html?cat=anime">Anime</a></li>
+      <li><a href="shop.html?cat=tees">Tees</a></li>
+      <li><a href="shop.html?cat=hoodies">Hoodies</a></li>
+      <li><a href="shop.html?cat=sweatshirts">Sweatshirts</a></li>
+      <li><a href="shop.html">All</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="account.html" class="icon-btn" data-nav="account" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </a>
+      <a href="cart.html" class="icon-btn active" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-toggle icon-btn" aria-label="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap page-head">
+  <div class="breadcrumb"><a href="index.html">Home</a> / Cart</div>
+  <h1 class="page-title">Your Cart</h1>
+</div>
+
+<div class="wrap" id="cartRoot"></div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-bottom" style="border-top:1px solid var(--line); margin-top:0; padding-top:24px;">
+      <span>© 2026 HOGALALLA. All rights reserved.</span>
+      <span>Made on demand · Fulfilled via Printify</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="supabase-client.js"></script>
+<script src="app.js"></script>
+<script>
+  function render() {
+    const cart = getCart();
+    const root = document.getElementById('cartRoot');
+    if (cart.length === 0) {
+      root.innerHTML = `<div class="empty-state">
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added anything yet.</p>
+        <a href="shop.html" class="btn btn-primary" style="margin-top:20px;">Browse Products</a>
+      </div>`;
+      return;
+    }
+    const items = cart.map((item, i) => {
+      const p = getProduct(item.id);
+      if (!p) return '';
+      return `
+      <div class="cart-item">
+        <div class="cart-item-media"><img src="${p.image}" alt="${p.name}"></div>
+        <div class="cart-item-info">
+          <a href="product.html?id=${p.id}"><h4>${p.name}</h4></a>
+          <div class="meta">Size: ${item.size} · Colour: ${item.color === p.colors[0] ? 'Black' : 'Blue'}</div>
+          <div class="qty-control" style="width:fit-content;">
+            <button data-minus="${i}">−</button>
+            <span>${item.qty}</span>
+            <button data-plus="${i}">+</button>
+          </div>
+        </div>
+        <div class="cart-item-right">
+          <span class="price">${formatINR(p.price * item.qty)}</span>
+          <a href="#" class="remove-link" data-remove="${i}">Remove</a>
+        </div>
+      </div>`;
+    }).join('');
+
+    const total = cartTotal();
+    const shipping = total > 1500 ? 0 : 99;
+
+    root.innerHTML = `
+      <div class="cart-layout">
+        <div>${items}</div>
+        <div class="summary-card">
+          <h3>Order Summary</h3>
+          <div class="summary-row"><span>Subtotal</span><span>${formatINR(total)}</span></div>
+          <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? 'Free' : formatINR(shipping)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${formatINR(total + shipping)}</span></div>
+          <a href="checkout.html" class="btn btn-primary btn-block btn-lg" style="margin-top:18px;">Proceed to Checkout</a>
+          <a href="shop.html" class="btn btn-outline btn-block" style="margin-top:10px;">Continue Shopping</a>
+        </div>
+      </div>`;
+
+    root.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', e => {
+      e.preventDefault();
+      removeFromCart(Number(el.dataset.remove));
+      render();
+    }));
+    root.querySelectorAll('[data-plus]').forEach(el => el.addEventListener('click', () => {
+      const i = Number(el.dataset.plus);
+      updateQty(i, getCart()[i].qty + 1);
+      render();
+    }));
+    root.querySelectorAll('[data-minus]').forEach(el => el.addEventListener('click', () => {
+      const i = Number(el.dataset.minus);
+      updateQty(i, getCart()[i].qty - 1);
+      render();
+    }));
+  }
+  loadAllProducts().then(render);
+</script>
+</body>
+</html>

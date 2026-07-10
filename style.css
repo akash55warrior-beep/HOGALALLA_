@@ -1,654 +1,280 @@
-/* ============================================
-   HOGALALLA — Design tokens
-   ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — HOGALALLA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-:root {
-  --black: #0B0D12;
-  --black-soft: #12151C;
-  --panel: #171B24;
-  --line: #262B36;
-  --sky: #38BDF8;
-  --sky-deep: #1D4ED8;
-  --ink: #F1F5F9;
-  --muted: #8B93A3;
-  --danger: #F87171;
-  --radius: 2px;
-  --font-display: 'Anton', sans-serif;
-  --font-body: 'Space Grotesk', sans-serif;
-}
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html?cat=anime">Anime</a></li>
+      <li><a href="shop.html?cat=tees">Tees</a></li>
+      <li><a href="shop.html?cat=hoodies">Hoodies</a></li>
+      <li><a href="shop.html?cat=sweatshirts">Sweatshirts</a></li>
+      <li><a href="shop.html">All</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="account.html" class="icon-btn" data-nav="account" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </a>
+      <a href="cart.html" class="icon-btn" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-toggle icon-btn" aria-label="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+<div class="wrap">
+  <div class="breadcrumb" style="padding-top:28px;"><a href="index.html">Home</a> / <a href="shop.html" id="crumbCat">Shop</a> / <span id="crumbName">Product</span></div>
 
-html { scroll-behavior: smooth; }
+  <div class="pd-grid" id="pdRoot"></div>
 
-body {
-  background: var(--black);
-  color: var(--ink);
-  font-family: var(--font-body);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+  <div class="section" style="padding-top:0; border-top:1px solid var(--line);">
+    <div class="section-head">
+      <h2>Reviews</h2>
+      <div id="ratingSummary" style="color:var(--muted); font-size:14px;"></div>
+    </div>
+    <div class="cart-layout" style="grid-template-columns: 1fr 380px;">
+      <div id="reviewsList"></div>
+      <div class="form-card">
+        <h3>Write a Review</h3>
+        <div class="field">
+          <label>Your Rating</label>
+          <div id="starPicker" style="display:flex; gap:6px; font-size:26px; cursor:pointer;"></div>
+        </div>
+        <div class="field"><label>Name</label><input type="text" id="revName"></div>
+        <div class="field"><label>Comment</label><input type="text" id="revComment" placeholder="How was it?"></div>
+        <button class="btn btn-primary btn-block" id="submitReviewBtn">Submit Review</button>
+      </div>
+    </div>
+  </div>
 
-a { color: inherit; text-decoration: none; }
-ul { list-style: none; }
-button { font-family: inherit; cursor: pointer; }
-input, select { font-family: inherit; }
+  <div class="section" style="padding-top:0;">
+    <div class="section-head"><h2>You may also like</h2></div>
+    <div class="product-grid" id="relatedGrid"></div>
+  </div>
+</div>
 
-img { max-width: 100%; display: block; }
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:14px;">HOGA<span>LALLA</span></div>
+        <p class="desc">Independent streetwear label. Designed in-house, printed and shipped on demand.</p>
+      </div>
+      <div>
+        <h5>Shop</h5>
+        <div class="footer-links">
+          <a href="shop.html?cat=anime">Anime</a>
+          <a href="shop.html?cat=tees">Tees</a>
+          <a href="shop.html?cat=hoodies">Hoodies</a>
+          <a href="shop.html?cat=sweatshirts">Sweatshirts</a>
+        </div>
+      </div>
+      <div>
+        <h5>Help</h5>
+        <div class="footer-links">
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="account.html">Track Order</a>
+        </div>
+      </div>
+      <div>
+        <h5>Newsletter</h5>
+        <div class="field"><input type="email" placeholder="you@email.com"></div>
+        <button class="btn btn-primary btn-block" onclick="showToast('Subscribed')">Subscribe</button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 HOGALALLA. All rights reserved.</span>
+      <span>Made on demand · Fulfilled via Printify</span>
+    </div>
+  </div>
+</footer>
 
-.wrap {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="supabase-client.js"></script>
+<script src="app.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  let product, selectedSize, selectedColorIdx = 0, qty = 1, currentRating = 5;
 
-/* ============================================
-   Tag / stitched-badge signature motif
-   ============================================ */
-.tag {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1.5px dashed var(--sky);
-  border-radius: 3px;
-  padding: 4px 10px;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--sky);
-  font-weight: 600;
-}
-.tag::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--sky);
-}
+  function renderPD() {
+    document.getElementById('pdRoot').innerHTML = `
+      <div>
+        <div class="pd-gallery-main"><img src="${product.images[selectedColorIdx]}" alt="${product.name}"></div>
+        <div class="pd-thumbs">
+          ${product.images.map((img, i) => `<div class="pd-thumb ${i === selectedColorIdx ? 'active' : ''}" data-idx="${i}"><img src="${img}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="pd-info">
+        <span class="card-cat">${product.category}</span>
+        <h1>${product.name}</h1>
+        <div class="pd-price">
+          <span class="price">${formatINR(product.price)}</span>
+          ${product.oldPrice ? `<span class="price-old">${formatINR(product.oldPrice)}</span>` : ''}
+          ${product.badge ? `<span class="tag">${product.badge}</span>` : ''}
+        </div>
+        <p class="pd-desc">${product.desc}</p>
 
-/* ============================================
-   Navbar
-   ============================================ */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(11,13,18,0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
-}
-.nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 72px;
-  gap: 24px;
-}
-.logo {
-  font-family: var(--font-display);
-  font-size: 24px;
-  letter-spacing: 0.02em;
-  color: var(--ink);
-  white-space: nowrap;
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-}
-.logo span { color: var(--sky); }
-.nav-links {
-  display: flex;
-  gap: 28px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--muted);
-}
-.nav-links a { transition: color .15s ease; position: relative; }
-.nav-links a:hover, .nav-links a.active { color: var(--ink); }
-.nav-links a.active::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: -22px;
-  height: 2px;
-  background: var(--sky);
-}
-.nav-actions { display: flex; align-items: center; gap: 18px; }
-.icon-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  color: var(--ink);
-  transition: border-color .15s ease, background .15s ease;
-}
-.icon-btn:hover { border-color: var(--sky); background: rgba(56,189,248,0.08); }
-.cart-count {
-  position: absolute;
-  top: -6px; right: -6px;
-  background: var(--sky);
-  color: var(--black);
-  font-size: 10px;
-  font-weight: 700;
-  width: 17px; height: 17px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.nav-toggle { display: none; }
+        <div class="option-group">
+          <div class="option-label"><span>Size</span><a href="#" style="color:var(--sky);" id="sizeGuideLink">Size guide</a></div>
+          <div class="option-row" id="sizeRow">
+            ${product.sizes.map(s => `<button class="opt-btn ${s === selectedSize ? 'active' : ''}" data-size="${s}">${s}</button>`).join('')}
+          </div>
+        </div>
 
-/* ============================================
-   Buttons
-   ============================================ */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 13px 26px;
-  border-radius: var(--radius);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  border: 1px solid transparent;
-  transition: transform .15s ease, background .15s ease, border-color .15s ease;
-}
-.btn:active { transform: scale(0.97); }
-.btn-primary { background: var(--sky); color: var(--black); }
-.btn-primary:hover { background: #5ecdfa; }
-.btn-outline { border-color: var(--line); color: var(--ink); background: transparent; }
-.btn-outline:hover { border-color: var(--sky); color: var(--sky); }
-.btn-block { width: 100%; }
-.btn-lg { padding: 16px 28px; font-size: 15px; }
+        <div class="option-group">
+          <div class="option-label"><span>Colour</span></div>
+          <div class="option-row" id="colorRow">
+            ${product.colors.map((c, i) => `<button class="opt-btn ${i === selectedColorIdx ? 'active' : ''}" data-color-idx="${i}" style="border-color:${i === selectedColorIdx ? 'var(--sky)' : 'var(--line)'};"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${c};margin-right:6px;vertical-align:middle;border:1px solid var(--line);"></span>${i === 0 ? 'Black' : 'Blue'}</button>`).join('')}
+          </div>
+        </div>
 
-/* ============================================
-   Hero
-   ============================================ */
-.hero {
-  position: relative;
-  padding: 90px 0 70px;
-  overflow: hidden;
-  border-bottom: 1px solid var(--line);
-}
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -200px; right: -150px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(56,189,248,0.18), transparent 70%);
-  pointer-events: none;
-}
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 48px;
-  align-items: center;
-  position: relative;
-}
-.hero-eyebrow { margin-bottom: 20px; }
-.hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(42px, 6vw, 76px);
-  line-height: 0.96;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-}
-.hero h1 .outline {
-  -webkit-text-stroke: 1.5px var(--sky);
-  color: transparent;
-}
-.hero p {
-  color: var(--muted);
-  font-size: 16px;
-  max-width: 440px;
-  margin: 22px 0 32px;
-}
-.hero-actions { display: flex; gap: 14px; }
-.hero-visual {
-  aspect-ratio: 4/5;
-  background: linear-gradient(155deg, var(--panel), var(--black-soft));
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.hero-visual::before {
-  content: 'HGL';
-  font-family: var(--font-display);
-  font-size: 180px;
-  color: rgba(56,189,248,0.08);
-  position: absolute;
-  letter-spacing: -8px;
-}
-.hero-visual img { position: relative; z-index: 1; width: 78%; }
+        <div class="qty-row">
+          <span class="option-label" style="margin:0;">Quantity</span>
+          <div class="qty-control">
+            <button id="qtyMinus">−</button>
+            <span id="qtyVal">${qty}</span>
+            <button id="qtyPlus">+</button>
+          </div>
+        </div>
 
-/* ============================================
-   Section headers
-   ============================================ */
-.section { padding: 64px 0; }
-.section-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 36px;
-  gap: 20px;
-}
-.section-head h2 {
-  font-family: var(--font-display);
-  font-size: 32px;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-}
-.section-head p { color: var(--muted); font-size: 14px; max-width: 380px; }
+        <div class="pd-buy-row">
+          <button class="btn btn-outline btn-lg" style="flex:1;" id="addCartBtn">Add to Cart</button>
+          <button class="btn btn-primary btn-lg" style="flex:1;" id="buyNowBtn">Buy Now</button>
+        </div>
 
-/* ============================================
-   Category tiles
-   ============================================ */
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-.cat-tile {
-  position: relative;
-  aspect-ratio: 3/3.6;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  padding: 18px;
-  transition: border-color .2s ease, transform .2s ease;
-}
-.cat-tile:hover { border-color: var(--sky); transform: translateY(-4px); }
-.cat-tile::before {
-  content: attr(data-glyph);
-  position: absolute;
-  top: 10px; right: 14px;
-  font-family: var(--font-display);
-  font-size: 54px;
-  color: rgba(56,189,248,0.1);
-}
-.cat-tile h3 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  text-transform: uppercase;
-  position: relative; z-index: 1;
-}
-.cat-tile span {
-  display: block;
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
-  position: relative; z-index: 1;
-}
+        <div class="pd-meta">
+          <div><strong>Fulfilment:</strong> Printed to order, ships in 3–5 business days via Printify.</div>
+          <div><strong>Returns:</strong> Free size exchange within 7 days of delivery.</div>
+          <div><strong>Material:</strong> Premium cotton blend, screen/DTG printed.</div>
+        </div>
+      </div>`;
 
-/* ============================================
-   Product grid + cards
-   ============================================ */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  overflow: hidden;
-  transition: border-color .2s ease, transform .2s ease;
-  display: flex;
-  flex-direction: column;
-}
-.card:hover { border-color: var(--sky); transform: translateY(-3px); }
-.card-media {
-  aspect-ratio: 1/1.15;
-  background: var(--black-soft);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.card-media img { width: 68%; transition: transform .3s ease; }
-.card:hover .card-media img { transform: scale(1.06); }
-.card-badge {
-  position: absolute;
-  top: 10px; left: 10px;
-  background: var(--black);
-  border: 1px dashed var(--sky);
-  color: var(--sky);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 2px;
-  font-weight: 600;
-}
-.card-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-.card-cat { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-.card h4 { font-size: 15px; font-weight: 600; line-height: 1.3; }
-.card-price-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-.price { font-family: var(--font-display); font-size: 20px; color: var(--sky); }
-.price-old { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 6px; }
-.card-actions { display: flex; gap: 8px; padding: 0 16px 16px; }
-.card-actions .btn { flex: 1; padding: 10px; font-size: 12px; }
+    document.getElementById('sizeRow').addEventListener('click', e => {
+      const btn = e.target.closest('.opt-btn');
+      if (!btn) return;
+      selectedSize = btn.dataset.size;
+      renderPD();
+    });
+    document.getElementById('colorRow').addEventListener('click', e => {
+      const btn = e.target.closest('.opt-btn');
+      if (!btn) return;
+      selectedColorIdx = Number(btn.dataset.colorIdx);
+      renderPD();
+    });
+    document.querySelectorAll('.pd-thumb').forEach(t => t.addEventListener('click', () => {
+      selectedColorIdx = Number(t.dataset.idx);
+      renderPD();
+    }));
+    document.getElementById('qtyMinus').addEventListener('click', () => { qty = Math.max(1, qty - 1); renderPD(); });
+    document.getElementById('qtyPlus').addEventListener('click', () => { qty += 1; renderPD(); });
+    document.getElementById('addCartBtn').addEventListener('click', () => addToCart(product.id, selectedSize, product.colors[selectedColorIdx], qty));
+    document.getElementById('buyNowBtn').addEventListener('click', () => {
+      buyNowWhatsApp(product.id, selectedSize, product.colors[selectedColorIdx], qty);
+    });
+    document.getElementById('sizeGuideLink').addEventListener('click', e => { e.preventDefault(); showToast('Size guide: true to size, oversized fit runs 1 size large'); });
+  }
 
-/* ============================================
-   Footer
-   ============================================ */
-.footer {
-  border-top: 1px solid var(--line);
-  padding: 56px 0 28px;
-  margin-top: 40px;
-}
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
-  gap: 40px;
-  padding-bottom: 40px;
-}
-.footer h5 {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  margin-bottom: 16px;
-}
-.footer-links { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
-.footer-links a:hover { color: var(--sky); }
-.footer p.desc { color: var(--muted); font-size: 14px; max-width: 300px; }
-.footer-bottom {
-  border-top: 1px solid var(--line);
-  padding-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--muted);
-}
+  function starsHTML(rating, size = 16) {
+    let out = '';
+    for (let i = 1; i <= 5; i++) {
+      out += `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${i <= Math.round(rating) ? '#38BDF8' : 'none'}" stroke="#38BDF8" stroke-width="1.5"><polygon points="12 2 15 9 22 9 16.5 13.5 18.5 21 12 16.5 5.5 21 7.5 13.5 2 9 9 9"/></svg>`;
+    }
+    return out;
+  }
 
-/* ============================================
-   Breadcrumb / page header
-   ============================================ */
-.page-head { padding: 40px 0 8px; }
-.breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-.breadcrumb a:hover { color: var(--sky); }
-.page-title {
-  font-family: var(--font-display);
-  font-size: 34px;
-  text-transform: uppercase;
-}
+  function renderStarPicker() {
+    const el = document.getElementById('starPicker');
+    el.innerHTML = [1,2,3,4,5].map(i => `<span data-star="${i}" style="color:${i <= currentRating ? '#38BDF8' : '#262B36'};">★</span>`).join('');
+    el.querySelectorAll('[data-star]').forEach(s => s.addEventListener('click', () => {
+      currentRating = Number(s.dataset.star);
+      renderStarPicker();
+    }));
+  }
 
-/* ============================================
-   Filter bar
-   ============================================ */
-.filter-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding: 20px 0 32px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 32px;
-}
-.chip-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.chip {
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--muted);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all .15s ease;
-}
-.chip:hover { border-color: var(--sky); color: var(--ink); }
-.chip.active { background: var(--sky); border-color: var(--sky); color: var(--black); }
-.sort-select {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 9px 14px;
-  border-radius: 4px;
-  font-size: 13px;
-}
+  async function renderReviews() {
+    if (!isDBConnected()) {
+      document.getElementById('ratingSummary').innerHTML = '';
+      document.getElementById('reviewsList').innerHTML = `<div class="form-card"><p style="color:var(--muted); font-size:14px;">Reviews need the database connected to work — see <strong>Admin → API & Database</strong>. Once connected, customer reviews will show here for everyone.</p></div>`;
+      return;
+    }
+    const reviews = await fetchReviews(product.id);
+    const avg = averageRating(reviews);
+    document.getElementById('ratingSummary').innerHTML = reviews.length
+      ? `<div style="display:flex; align-items:center; gap:8px;">${starsHTML(avg, 18)}<span style="color:var(--ink); font-weight:600;">${avg.toFixed(1)}</span><span>(${reviews.length} review${reviews.length > 1 ? 's' : ''})</span></div>`
+      : 'No reviews yet — be the first!';
+    document.getElementById('reviewsList').innerHTML = reviews.length
+      ? reviews.map(r => `
+        <div class="form-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <strong>${r.name}</strong>
+            <div>${starsHTML(r.rating, 14)}</div>
+          </div>
+          <p style="color:var(--muted); font-size:14px;">${r.comment || ''}</p>
+        </div>`).join('')
+      : `<div class="form-card"><p style="color:var(--muted); font-size:14px;">No reviews yet for this product.</p></div>`;
+  }
 
-/* ============================================
-   Product detail
-   ============================================ */
-.pd-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  padding: 40px 0 80px;
-}
-.pd-gallery-main {
-  aspect-ratio: 1/1;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  margin-bottom: 12px;
-}
-.pd-gallery-main img { width: 65%; }
-.pd-thumbs { display: flex; gap: 10px; }
-.pd-thumb {
-  width: 76px; height: 76px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: border-color .15s ease;
-}
-.pd-thumb.active, .pd-thumb:hover { border-color: var(--sky); }
-.pd-thumb img { width: 60%; }
-.pd-info .card-cat { margin-bottom: 8px; }
-.pd-info h1 {
-  font-family: var(--font-display);
-  font-size: 30px;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.pd-price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; }
-.pd-price .price { font-size: 30px; }
-.pd-desc { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 28px; }
-.option-group { margin-bottom: 24px; }
-.option-label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-.option-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.opt-btn {
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink);
-  padding: 10px 16px;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all .15s ease;
-  min-width: 44px;
-  text-align: center;
-}
-.opt-btn:hover { border-color: var(--sky); }
-.opt-btn.active { border-color: var(--sky); background: rgba(56,189,248,0.1); color: var(--sky); }
-.qty-row { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
-.qty-control { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 4px; }
-.qty-control button { width: 38px; height: 40px; background: transparent; color: var(--ink); font-size: 16px; border: none; }
-.qty-control button:hover { color: var(--sky); }
-.qty-control span { width: 36px; text-align: center; font-weight: 600; }
-.pd-buy-row { display: flex; gap: 12px; margin-bottom: 24px; }
-.pd-meta { border-top: 1px solid var(--line); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: var(--muted); }
-.pd-meta strong { color: var(--ink); }
+  document.getElementById('submitReviewBtn').addEventListener('click', async () => {
+    const name = document.getElementById('revName').value.trim();
+    const comment = document.getElementById('revComment').value.trim();
+    if (!name) { showToast('Enter your name'); return; }
+    const result = await addReview(product.id, { name, rating: currentRating, comment });
+    if (result) {
+      showToast('Review submitted');
+      document.getElementById('revName').value = '';
+      document.getElementById('revComment').value = '';
+      currentRating = 5;
+      renderStarPicker();
+      renderReviews();
+    }
+  });
 
-/* ============================================
-   Cart page
-   ============================================ */
-.cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 40px; padding: 40px 0 80px; align-items: start; }
-.cart-item {
-  display: grid;
-  grid-template-columns: 90px 1fr auto;
-  gap: 18px;
-  align-items: center;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line);
-}
-.cart-item-media {
-  width: 90px; height: 90px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-}
-.cart-item-media img { width: 65%; }
-.cart-item-info h4 { font-size: 15px; margin-bottom: 4px; }
-.cart-item-info .meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-.cart-item-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-.remove-link { font-size: 12px; color: var(--danger); }
-.summary-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 24px;
-  position: sticky;
-  top: 96px;
-}
-.summary-card h3 { font-family: var(--font-display); font-size: 18px; text-transform: uppercase; margin-bottom: 18px; }
-.summary-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); margin-bottom: 12px; }
-.summary-row.total { color: var(--ink); font-weight: 700; font-size: 16px; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
-.empty-state { text-align: center; padding: 80px 0; color: var(--muted); }
-.empty-state h3 { font-family: var(--font-display); font-size: 24px; color: var(--ink); text-transform: uppercase; margin-bottom: 10px; }
+  loadAllProducts().then(() => {
+    product = getProduct(params.get('id')) || PRODUCTS[0];
+    if (!product) return;
+    selectedSize = product.sizes[1] || product.sizes[0];
 
-/* ============================================
-   Forms (checkout / login / account)
-   ============================================ */
-.form-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 28px;
-}
-.form-card h3 { font-family: var(--font-display); font-size: 18px; text-transform: uppercase; margin-bottom: 20px; }
-.field { margin-bottom: 16px; }
-.field label { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-.field input, .field select {
-  width: 100%;
-  background: var(--black-soft);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 12px 14px;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color .15s ease;
-}
-.field input:focus, .field select:focus { outline: none; border-color: var(--sky); }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    document.getElementById('crumbCat').textContent = product.category;
+    document.getElementById('crumbCat').href = `shop.html?cat=${product.category}`;
+    document.getElementById('crumbName').textContent = product.name;
+    document.title = product.name + ' — HOGALALLA';
 
-.auth-shell {
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 80px 0 100px;
-}
-.auth-shell .form-card { padding: 36px 30px; }
-.auth-head { text-align: center; margin-bottom: 28px; }
-.auth-head h1 { font-family: var(--font-display); font-size: 26px; text-transform: uppercase; margin-bottom: 8px; }
-.auth-head p { color: var(--muted); font-size: 13px; }
-.oauth-btn {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  border: 1px solid var(--line);
-  background: var(--black-soft);
-  color: var(--ink);
-  padding: 13px;
-  border-radius: 4px;
-  font-weight: 500;
-  font-size: 14px;
-  width: 100%;
-  transition: border-color .15s ease;
-}
-.oauth-btn:hover { border-color: var(--sky); }
-.divider { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 12px; margin: 20px 0; text-transform: uppercase; letter-spacing: 0.08em; }
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
-.auth-switch { text-align: center; margin-top: 18px; font-size: 13px; color: var(--muted); }
-.auth-switch a { color: var(--sky); font-weight: 600; }
+    renderPD();
+    renderStarPicker();
+    renderReviews();
 
-.checkout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 40px; padding: 40px 0 80px; align-items: start; }
-.checkout-steps { display: flex; gap: 24px; margin-bottom: 28px; font-size: 13px; color: var(--muted); }
-.checkout-steps .step.active { color: var(--sky); font-weight: 600; }
-.pay-options { display: flex; flex-direction: column; gap: 10px; }
-.pay-opt {
-  display: flex; align-items: center; gap: 12px;
-  border: 1px solid var(--line);
-  padding: 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color .15s ease;
-}
-.pay-opt:hover, .pay-opt.active { border-color: var(--sky); }
-.mini-order-item { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
-
-/* ============================================
-   Toast
-   ============================================ */
-.toast {
-  position: fixed;
-  bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--sky);
-  color: var(--black);
-  padding: 13px 24px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 14px;
-  opacity: 0;
-  pointer-events: none;
-  transition: all .25s ease;
-  z-index: 999;
-  white-space: nowrap;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ============================================
-   Misc content pages
-   ============================================ */
-.content-block { max-width: 720px; padding: 20px 0 80px; }
-.content-block h2 { font-family: var(--font-display); font-size: 26px; text-transform: uppercase; margin: 32px 0 12px; }
-.content-block p { color: var(--muted); margin-bottom: 14px; line-height: 1.75; }
-
-/* ============================================
-   Responsive
-   ============================================ */
-@media (max-width: 980px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .hero-visual { order: -1; max-width: 340px; margin: 0 auto; }
-  .cat-grid { grid-template-columns: repeat(2, 1fr); }
-  .product-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .pd-grid { grid-template-columns: 1fr; gap: 32px; }
-  .cart-layout, .checkout-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 640px) {
-  .nav-links { display: none; }
-  .nav-toggle { display: flex; }
-  .cat-grid, .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-  .field-row { grid-template-columns: 1fr; }
-  .hero { padding: 60px 0 40px; }
-}
+    const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+    document.getElementById('relatedGrid').innerHTML = related.map(p => `
+      <div class="card">
+        <a href="product.html?id=${p.id}" class="card-media">
+          ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
+          <img src="${p.image}" alt="${p.name}">
+        </a>
+        <div class="card-body">
+          <a href="product.html?id=${p.id}"><span class="card-cat">${p.category}</span><h4>${p.name}</h4></a>
+          <div class="card-price-row"><span class="price">${formatINR(p.price)}</span></div>
+        </div>
+        <div class="card-actions">
+          <a href="product.html?id=${p.id}" class="btn btn-outline">View</a>
+          <button class="btn btn-primary" onclick="buyNowWhatsApp('${p.id}','${p.sizes[1]||p.sizes[0]}','${p.colors[0]}',1)">Buy Now</button>
+        </div>
+      </div>`).join('');
+  });
+</script>
+</body>
+</html>

@@ -1,106 +1,136 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — HOGALALLA</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* ============================================
+   HOGALALLA — Mock product catalog
+   Swap this out later for a live fetch from your
+   Printify shop: GET /shops/{shop_id}/products.json
+   ============================================ */
 
-<nav class="nav">
-  <div class="wrap nav-inner">
-    <a href="index.html" class="logo">HOGA<span>LALLA</span></a>
-    <ul class="nav-links"><li><a href="shop.html">Continue Shopping</a></li></ul>
-    <div class="nav-actions">
-      <a href="cart.html" class="icon-btn" title="Cart">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
-        <span class="cart-count">0</span>
-      </a>
-    </div>
-  </div>
-</nav>
+// Generates a simple placeholder garment mockup as an inline SVG data URI.
+// Replace product.image with real Printify mockup URLs once connected.
+function mockupSVG(kind, base, accent, graphic) {
+  const shapes = {
+    tee: `<path d="M70 40 L40 55 L20 90 L45 105 L55 90 L55 220 L165 220 L165 90 L175 105 L200 90 L180 55 L150 40 C150 55 130 65 110 65 C90 65 70 55 70 40 Z"/>`,
+    hoodie: `<path d="M70 45 L38 60 L15 95 L42 112 L55 95 L55 100 C40 108 32 125 32 150 L32 225 L188 225 L188 150 C188 125 180 108 165 100 L165 95 L178 112 L205 95 L182 60 L150 45 C150 60 132 70 110 70 C88 70 70 60 70 45 Z"/><circle cx="110" cy="95" r="9" fill="none" stroke="${accent}" stroke-width="2"/>`,
+    tote: `<path d="M55 85 L165 85 L175 220 L45 220 Z"/><path d="M75 85 C75 60 90 45 110 45 C130 45 145 60 145 85" fill="none" stroke="${base}" stroke-width="6"/>`,
+    cap: `<path d="M40 130 C40 90 72 65 110 65 C148 65 180 90 180 130 L180 140 L40 140 Z"/><path d="M40 140 L10 155 L45 158 Z"/>`
+  };
+  const graphics = {
+    circle: `<circle cx="110" cy="130" r="26" fill="${accent}" opacity="0.9"/>`,
+    bolt: `<path d="M118 105 L96 140 L112 140 L104 165 L130 128 L112 128 Z" fill="${accent}"/>`,
+    wave: `<path d="M75 130 Q95 110 110 130 T145 130" stroke="${accent}" stroke-width="6" fill="none" stroke-linecap="round"/>`,
+    star: `<path d="M110 105 L116 122 L134 122 L120 133 L125 150 L110 140 L95 150 L100 133 L86 122 L104 122 Z" fill="${accent}"/>`,
+    eye: `<ellipse cx="110" cy="130" rx="24" ry="14" fill="none" stroke="${accent}" stroke-width="4"/><circle cx="110" cy="130" r="6" fill="${accent}"/>`,
+    grid: `<g stroke="${accent}" stroke-width="2" opacity="0.85">
+      <line x1="90" y1="108" x2="90" y2="152"/><line x1="110" y1="108" x2="110" y2="152"/><line x1="130" y1="108" x2="130" y2="152"/>
+      <line x1="90" y1="115" x2="130" y2="115"/><line x1="90" y1="130" x2="130" y2="130"/><line x1="90" y1="145" x2="130" y2="145"/>
+    </g>`
+  };
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 240">
+    <rect width="220" height="240" fill="none"/>
+    <g fill="${base}" stroke="${accent}" stroke-width="2.5">${shapes[kind]}</g>
+    ${graphics[graphic] || ''}
+  </svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
 
-<div class="wrap auth-shell">
-  <div class="auth-head">
-    <h1>Welcome Back</h1>
-    <p>Log in to track orders and check out faster</p>
-  </div>
+const PRODUCTS = [
+  {
+    id: 'p1', name: 'Ronin Drift Tee', category: 'anime',
+    price: 799, oldPrice: 999, badge: 'New Drop',
+    colors: ['#0B0D12', '#1D4ED8'], sizes: ['S','M','L','XL','XXL'],
+    kind: 'tee', graphic: 'bolt', accent: '#38BDF8',
+    desc: 'Heavyweight 220 GSM cotton tee with a high-density front print inspired by night-city drift culture. Oversized boxy fit.'
+  },
+  {
+    id: 'p2', name: 'Neon Katana Hoodie', category: 'hoodies',
+    price: 1799, oldPrice: 2199, badge: 'Bestseller',
+    colors: ['#0B0D12'], sizes: ['S','M','L','XL','XXL'],
+    kind: 'hoodie', graphic: 'star', accent: '#38BDF8',
+    desc: 'Fleece-lined 380 GSM hoodie, kangaroo pocket, ribbed cuffs. Back and front print, brushed interior for winter wear.'
+  },
+  {
+    id: 'p3', name: 'Spirit Eye Oversized Tee', category: 'anime',
+    price: 849, oldPrice: null, badge: null,
+    colors: ['#0B0D12', '#171B24'], sizes: ['M','L','XL'],
+    kind: 'tee', graphic: 'eye', accent: '#38BDF8',
+    desc: 'Drop-shoulder oversized fit with a minimal single-eye motif front and center. Soft-hand water-based ink.'
+  },
+  {
+    id: 'p4', name: 'Circuit Wave Tee', category: 'tees',
+    price: 699, oldPrice: 899, badge: 'Sale',
+    colors: ['#1D4ED8', '#0B0D12'], sizes: ['S','M','L','XL'],
+    kind: 'tee', graphic: 'wave', accent: '#38BDF8',
+    desc: 'Regular fit essential tee with a subtle chest-level wave graphic. Everyday staple, 100% combed cotton.'
+  },
+  {
+    id: 'p5', name: 'Blackout Grid Hoodie', category: 'hoodies',
+    price: 1899, oldPrice: null, badge: 'New Drop',
+    colors: ['#0B0D12'], sizes: ['S','M','L','XL','XXL'],
+    kind: 'hoodie', graphic: 'grid', accent: '#38BDF8',
+    desc: 'Structured heavyweight hoodie with a minimal grid print. Dropped shoulder, boxy silhouette.'
+  },
+  {
+    id: 'p6', name: 'Aura Orb Sweatshirt', category: 'sweatshirts',
+    price: 1499, oldPrice: 1699, badge: null,
+    colors: ['#171B24', '#1D4ED8'], sizes: ['S','M','L','XL'],
+    kind: 'hoodie', graphic: 'circle', accent: '#38BDF8',
+    desc: 'Crewneck sweatshirt, mid-weight fleece, single orb graphic. Layers clean under a jacket.'
+  },
+  {
+    id: 'p7', name: 'Ronin Star Tee', category: 'anime',
+    price: 799, oldPrice: null, badge: null,
+    colors: ['#0B0D12'], sizes: ['S','M','L','XL','XXL'],
+    kind: 'tee', graphic: 'star', accent: '#38BDF8',
+    desc: 'Front-and-back print oversized tee, inspired by shonen title cards. Garment-dyed for a worn-in look.'
+  },
+  {
+    id: 'p8', name: 'Signal Tote', category: 'accessories',
+    price: 449, oldPrice: null, badge: null,
+    colors: ['#0B0D12'], sizes: ['One Size'],
+    kind: 'tote', graphic: 'bolt', accent: '#38BDF8',
+    desc: 'Heavy canvas tote, reinforced handles, printed front graphic. Fits a 15" laptop easily.'
+  },
+  {
+    id: 'p9', name: 'Static Grid Cap', category: 'accessories',
+    price: 599, oldPrice: 699, badge: 'Sale',
+    colors: ['#0B0D12', '#1D4ED8'], sizes: ['One Size'],
+    kind: 'cap', graphic: 'grid', accent: '#38BDF8',
+    desc: 'Structured 6-panel cap with embroidered front logo and adjustable strap back.'
+  },
+  {
+    id: 'p10', name: 'Drift Wave Oversized Tee', category: 'tees',
+    price: 749, oldPrice: null, badge: 'New Drop',
+    colors: ['#0B0D12', '#171B24'], sizes: ['S','M','L','XL'],
+    kind: 'tee', graphic: 'wave', accent: '#38BDF8',
+    desc: 'Oversized fit tee with a wave-line graphic across the chest. Pre-shrunk heavyweight cotton.'
+  },
+  {
+    id: 'p11', name: 'Nightfall Zip Hoodie', category: 'hoodies',
+    price: 2099, oldPrice: 2399, badge: 'Bestseller',
+    colors: ['#0B0D12'], sizes: ['M','L','XL','XXL'],
+    kind: 'hoodie', graphic: 'eye', accent: '#38BDF8',
+    desc: 'Full-zip heavyweight hoodie with embroidered sleeve detail and a minimal front graphic.'
+  },
+  {
+    id: 'p12', name: 'Orb Crew Sweatshirt', category: 'sweatshirts',
+    price: 1399, oldPrice: null, badge: null,
+    colors: ['#171B24'], sizes: ['S','M','L','XL'],
+    kind: 'hoodie', graphic: 'circle', accent: '#38BDF8',
+    desc: 'Relaxed-fit crewneck with a soft brushed interior. Clean orb print, minimal branding.'
+  }
+];
 
-  <div class="form-card">
-    <button class="oauth-btn" id="googleBtn">
-      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.5-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.2 5.2C40.9 36 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
-      Continue with Google
-    </button>
+PRODUCTS.forEach(p => {
+  p.image = mockupSVG(p.kind, p.colors[0], p.accent, p.graphic);
+  p.images = p.colors.map(c => mockupSVG(p.kind, c, p.accent, p.graphic));
+});
 
-    <div class="divider">Or</div>
+const CATEGORIES = [
+  { id: 'anime', label: 'Anime', glyph: 'A', desc: 'Graphic prints inspired by anime & manga culture' },
+  { id: 'tees', label: 'Tees', glyph: 'T', desc: 'Everyday essential and oversized tees' },
+  { id: 'hoodies', label: 'Hoodies', glyph: 'H', desc: 'Heavyweight fleece, built for layering' },
+  { id: 'sweatshirts', label: 'Sweatshirts', glyph: 'S', desc: 'Crewnecks for clean, minimal fits' },
+  { id: 'accessories', label: 'Accessories', glyph: 'X', desc: 'Totes, caps & the small stuff' }
+];
 
-    <div id="phoneStep">
-      <div class="field">
-        <label>Mobile Number</label>
-        <input type="tel" id="phoneInput" placeholder="+91 98765 43210">
-      </div>
-      <button class="btn btn-primary btn-block" id="sendOtpBtn">Send OTP</button>
-    </div>
-
-    <div id="otpStep" style="display:none;">
-      <div class="field">
-        <label>Enter OTP sent to <span id="phoneDisplay"></span></label>
-        <input type="text" id="otpInput" maxlength="6" placeholder="6-digit code">
-      </div>
-      <button class="btn btn-primary btn-block" id="verifyOtpBtn">Verify & Login</button>
-      <button class="btn btn-outline btn-block" id="backBtn" style="margin-top:10px;">Use a different number</button>
-    </div>
-  </div>
-
-  <p class="auth-switch">By continuing you agree to HOGALALLA's <a href="about.html">Terms</a> & Privacy Policy</p>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="config.js"></script>
-<script src="data.js"></script>
-<script src="supabase-client.js"></script>
-<script src="app.js"></script>
-<script>
-  /* -----------------------------------------------------------
-     Google login now uses real Supabase Auth (if connected).
-     Phone OTP below is still a demo/mock — real SMS OTP needs a
-     paid SMS provider wired into Supabase (e.g. Twilio), which
-     isn't set up yet. Ask for help when you're ready for that.
-  ----------------------------------------------------------- */
-  document.getElementById('googleBtn').addEventListener('click', async () => {
-    if (!isDBConnected()) {
-      showToast('Connect your database first — see Admin → API & Database');
-      return;
-    }
-    const { error } = await sb.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin + '/account.html' }
-    });
-    if (error) { console.error(error); showToast('Google login failed'); }
-  });
-
-  document.getElementById('sendOtpBtn').addEventListener('click', () => {
-    const phone = document.getElementById('phoneInput').value.trim();
-    if (!phone) { showToast('Enter your mobile number'); return; }
-    document.getElementById('phoneDisplay').textContent = phone;
-    document.getElementById('phoneStep').style.display = 'none';
-    document.getElementById('otpStep').style.display = 'block';
-    showToast('OTP sent (demo: use 123456)');
-  });
-
-  document.getElementById('verifyOtpBtn').addEventListener('click', () => {
-    const otp = document.getElementById('otpInput').value.trim();
-    if (otp.length < 4) { showToast('Enter a valid OTP'); return; }
-    setUser({ name: 'Guest', method: 'phone', phone: document.getElementById('phoneInput').value });
-    showToast('Logged in');
-    setTimeout(() => window.location.href = 'account.html', 700);
-  });
-
-  document.getElementById('backBtn').addEventListener('click', () => {
-    document.getElementById('otpStep').style.display = 'none';
-    document.getElementById('phoneStep').style.display = 'block';
-  });
-</script>
-</body>
-</html>
+function getProduct(id) { return PRODUCTS.find(p => p.id === id); }
+function getProductsByCategory(cat) { return cat && cat !== 'all' ? PRODUCTS.filter(p => p.category === cat) : PRODUCTS; }
