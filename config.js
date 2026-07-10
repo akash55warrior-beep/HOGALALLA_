@@ -16,4 +16,4 @@ const SUPABASE_ANON_KEY = 'PASTE_YOUR_PUBLISHABLE_KEY_HERE';
    Format: country code + number, NO plus sign, NO spaces/dashes.
    Example for an Indian number 98765 43210 → '919876543210'
    ============================================ */
-const WHATSAPP_NUMBER = '';
+const WHATSAPP_NUMBER = '9064952873';
