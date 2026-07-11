@@ -58,23 +58,21 @@
     if (data.session) {
       user = sessionToUser(data.session);
     } else if (window.location.hash.includes('access_token')) {
-      /* We just landed here straight from Google's redirect — Supabase's
-         client is still processing the token in the URL. Wait for it to
-         finish instead of giving up after one empty check. */
       root.innerHTML = `<div class="empty-state"><h3>Signing you in…</h3><p>One moment.</p></div>`;
-      user = await new Promise(resolve => {
-        const { data: sub } = sb.auth.onAuthStateChange((event, session) => {
-          if (session) {
-            sub.subscription.unsubscribe();
-            resolve(sessionToUser(session));
-          }
-        });
-        // safety timeout so we don't hang forever if something goes wrong
-        setTimeout(() => resolve(null), 6000);
-      });
+      const params = new URLSearchParams(window.location.hash.substring(1));
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      if (access_token && refresh_token) {
+        const { data: setData, error } = await sb.auth.setSession({ access_token, refresh_token });
+        if (error) console.error('setSession error', error);
+        if (setData && setData.session) {
+          user = sessionToUser(setData.session);
+          history.replaceState(null, '', window.location.pathname);
+        }
+      }
     }
   }
-  if (!user) user = getUser(); // fallback: phone-OTP demo login, still mocked
+  if (!user) user = getUser();
 
   if (!user) {
     root.innerHTML = `<div class="empty-state">
