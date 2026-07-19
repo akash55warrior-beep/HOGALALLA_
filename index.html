@@ -6,7 +6,7 @@
 <title>HOGALALLA — Built to Wear Into Anything</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="landing.css">
 </head>
 <body>
 
@@ -57,6 +57,17 @@
   <div class="scroll-cue"><span>Scroll</span><span class="stem"></span></div>
 </section>
 
+<section id="the-build" class="build-section">
+  <div class="build-sticky">
+    <div class="build-eyebrow eyebrow">Scroll to build</div>
+    <div id="build-stage"></div>
+    <div class="build-caption">
+      <span class="code">2026.07 — H-01</span>
+      <h3 class="display">Blade Hoodie</h3>
+    </div>
+  </div>
+</section>
+
 <section id="lookbook">
   <div class="section-head">
     <h2 class="display">Look<br>book</h2>
@@ -75,83 +86,30 @@
 <section id="drop">
   <div class="section-head">
     <h2 class="display">The<br>Drop</h2>
-    <p>Cut for movement, priced to actually wear — not just post once and fold away.</p>
+    <p>Cut for movement, priced to actually wear — not just post once and fold away. Swipe through the drop.</p>
   </div>
-  <div class="works">
 
-    <div class="work">
-      <div class="work-visual" data-shape="hoodie"></div>
-      <div class="work-info">
-        <span class="code">2026.07 — H-01</span>
-        <h3>Blade Hoodie</h3>
-        <p class="desc">Heavyweight 320gsm fleece, dropped shoulder, blade-cut hem, kangaroo pocket. Brushed inner for the months it actually gets cold.</p>
-        <div class="tags"><span class="tag">Streetwear</span><span class="tag">Oversized</span><span class="tag">Unisex</span></div>
-        <span class="price">₹1,899</span>
-        <a class="work-link" href="#order">Order this piece →</a>
-      </div>
+  <div class="wear-stage" id="wearStage">
+    <button class="wear-nav prev" id="wearPrev" aria-label="Previous piece">‹</button>
+    <div class="wear-track" id="wearTrack">
+      <div class="wear-slot role-prev" data-role="prev"><div class="wear-figure"></div></div>
+      <div class="wear-slot role-current" data-role="current"><div class="wear-figure"></div></div>
+      <div class="wear-slot role-next" data-role="next"><div class="wear-figure"></div></div>
+    </div>
+    <button class="wear-nav next" id="wearNext" aria-label="Next piece">›</button>
+
+    <div class="wear-info work-info">
+      <span class="code" id="wearCode"></span>
+      <h3 id="wearName"></h3>
+      <p class="desc" id="wearDesc"></p>
+      <div class="tags" id="wearTags"></div>
+      <span class="price" id="wearPrice"></span>
+      <a class="work-link" href="#order">Order this piece →</a>
     </div>
 
-    <div class="work">
-      <div class="work-visual" data-shape="tee"></div>
-      <div class="work-info">
-        <span class="code">2026.07 — H-02</span>
-        <h3>Split-H Tee</h3>
-        <p class="desc">240gsm combed cotton with the split-H graphic across the chest. The piece the rest of the drop is built around.</p>
-        <div class="tags"><span class="tag">Graphic</span><span class="tag">240gsm</span><span class="tag">Unisex</span></div>
-        <span class="price">₹799</span>
-        <a class="work-link" href="#order">Order this piece →</a>
-      </div>
-    </div>
-
-    <div class="work">
-      <div class="work-visual" data-shape="cap"></div>
-      <div class="work-info">
-        <span class="code">2026.07 — H-03</span>
-        <h3>Forge Cap</h3>
-        <p class="desc">Structured 6-panel with an embroidered mark up front and a snapback closure that actually holds.</p>
-        <div class="tags"><span class="tag">Structured</span><span class="tag">6-Panel</span></div>
-        <span class="price">₹599</span>
-        <a class="work-link" href="#order">Order this piece →</a>
-      </div>
-    </div>
-
-    <div class="work">
-      <div class="work-visual" data-shape="joggers"></div>
-      <div class="work-info">
-        <span class="code">2026.07 — H-04</span>
-        <h3>Forge Joggers</h3>
-        <p class="desc">Tapered fit fleece joggers with ribbed cuffs and a zip pocket. Built to match the hoodie without trying too hard.</p>
-        <div class="tags"><span class="tag">Tapered</span><span class="tag">Fleece</span></div>
-        <span class="price">₹1,699</span>
-        <a class="work-link" href="#order">Order this piece →</a>
-      </div>
-    </div>
-
-    <div class="work">
-      <div class="work-visual" data-shape="jacket"></div>
-      <div class="work-info">
-        <span class="code">2026.07 — H-05</span>
-        <h3>Edge Jacket</h3>
-        <p class="desc">Lightweight shell with a stand collar and taped seams. The piece for when the hoodie isn't quite enough.</p>
-        <div class="tags"><span class="tag">Shell</span><span class="tag">Water-resistant</span></div>
-        <span class="price">₹2,399</span>
-        <a class="work-link" href="#order">Order this piece →</a>
-      </div>
-    </div>
-
-    <div class="work">
-      <div class="work-visual" data-shape="tote"></div>
-      <div class="work-info">
-        <span class="code">2026.07 — H-06</span>
-        <h3>Carry Tote</h3>
-        <p class="desc">Heavy canvas tote with the mark printed front and back. Holds more than it looks like it should.</p>
-        <div class="tags"><span class="tag">Canvas</span><span class="tag">Everyday</span></div>
-        <span class="price">₹499</span>
-        <a class="work-link" href="#order">Order this piece →</a>
-      </div>
-    </div>
-
+    <div class="wear-dots" id="wearDots"></div>
   </div>
+
   <div class="more-works"><a href="https://instagram.com/hogalalla" target="_blank" rel="noopener">See the full drop on Instagram →</a></div>
 </section>
 
@@ -241,6 +199,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="script.js"></script>
+<script src="landing.js"></script>
 </body>
 </html>
